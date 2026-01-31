@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 const baseUrl = process.env.BASE_URL;
 
@@ -60,12 +61,22 @@ export async function GET(req: Request) {
             );
         }
 
-        return NextResponse.json(
-            {
-                steamId64,
-                message: "Steam OpenID verified",
-            },
-            { status: 200 },
-        )
+        const user = await prisma.user.upsert({
+            where: { steamId64 },
+            update: {},
+            create: { steamId64 },
+        });
+        
+        // const token = createJwt({ userId: user.id, steamId64 });
+
+        // cookies().set("auth", token, {
+        // httpOnly: true,
+        // secure: process.env.NODE_ENV === "production",
+        // sameSite: "lax",
+        // path: "/",
+        // });
+
+        return NextResponse.redirect(new URL("/explore", baseUrl));
+
     }
 }

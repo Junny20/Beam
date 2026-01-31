@@ -202,13 +202,13 @@ export type UserScalarWhereWithAggregatesInput = {
 }
 
 export type UserCreateInput = {
-  id: string
+  id?: string
   steamId64: string
   createdAt?: Date | string
 }
 
 export type UserUncheckedCreateInput = {
-  id: string
+  id?: string
   steamId64: string
   createdAt?: Date | string
 }
@@ -226,7 +226,7 @@ export type UserUncheckedUpdateInput = {
 }
 
 export type UserCreateManyInput = {
-  id: string
+  id?: string
   steamId64: string
   createdAt?: Date | string
 }
