@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import profileIcon from '@/public/profileIcon.png';
+import profileIcon from '@/public/profileIcon.svg';
 
 export const NavBar = () => {
     const [username, setUsername] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export const NavBar = () => {
     const handleLogout = () => {};
 
     return (
-        <div className="relative flex items-center p-[10px] bg-gray-400 w-full">
+        <div className="relative flex items-center p-[10px] w-full bg-[#D9D9D9]/40 backdrop-blur-lg">
             <div className="flex flex-1 justify-center gap-[130px] items-center">
                 {links.map((link) => (
                     <Link
@@ -38,7 +38,7 @@ export const NavBar = () => {
             <div className="relative group text-right">
                 <Link
                     href={username ? '/profile' : '/login'}
-                    className={`px-5 py-1 whitespace-nowrap flex gap-[5px] items-center ${
+                    className={`px-5 py-1 whitespace-nowrap flex gap-[8px] items-center ${
                         pathname === (username ? '/profile' : '/login')
                             ? 'underline underline-offset-4 font-medium'
                             : 'hover:underline underline-offset-4'
@@ -48,12 +48,12 @@ export const NavBar = () => {
                     <Image
                         src={profileIcon}
                         alt="profile icon"
-                        width={20}
-                        height={20}
-                        className="h-4 w-4 object-contain"
+                        width={18}
+                        height={18}
+                        className="h-4 w-4 object-contain filter brightness-0 invert"
                     />
                 </Link>
-                <div className="absolute right-0 top-full hidden group-hover:block group-focus-within:block w-32 bg-gray-300 text-center">
+                <div className="absolute right-0 top-full hidden group-hover:block group-focus-within:block w-32 bg-gray-200 text-black text-center">
                     <Link
                         href="/profile"
                         className="block w-full px-4 py-2 hover:bg-gray-100"
