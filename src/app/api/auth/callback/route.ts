@@ -1,16 +1,23 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { AuthPayload, signAuthJwt } from "@/lib/auth";
 
-const baseUrl = process.env.BASE_URL;
+const baseUrl = process.env.BASE_URL!;
+const cookieExpiresIn = process.env.COOKIE_EXPIRES_IN!;
+const steamVerifyUrl = "https://steamcommunity.com/openid/login";
 
 export async function GET(req: Request) {
-    const steamVerifyUrl = "https://steamcommunity.com/openid/login";
-
     const { searchParams } = new URL(req.url); 
+
+    // if user clicks cancel when prompted to login through steam there is 
+    // nothing to process
+    if (searchParams.get("openid.mode") === "cancel") {
+        return NextResponse.redirect(new URL("/login?cancel=1", baseUrl));
+    }
     
     const openidParams: Record<string, string> = {};
     for (const [key, value] of searchParams.entries()) {
-        if (key.startsWith("openid")) {
+        if (key.startsWith("openid.")) {
             openidParams[key] = value;
         }
     }
@@ -30,6 +37,13 @@ export async function GET(req: Request) {
         },
         body: verifyParams.toString(),
     })
+
+    if (!res.ok) {
+        return NextResponse.json(
+            { error: "Steam OpenID verification unavailable" },
+            { status: 502 } // bad gateway
+        );
+    }
 
     const text = await res.text();
     
@@ -67,16 +81,23 @@ export async function GET(req: Request) {
             create: { steamId64 },
         });
         
-        // const token = createJwt({ userId: user.id, steamId64 });
+        const payload: AuthPayload = {
+            userId: user.id,
+            steamId64,
+        }
 
-        // cookies().set("auth", token, {
-        // httpOnly: true,
-        // secure: process.env.NODE_ENV === "production",
-        // sameSite: "lax",
-        // path: "/",
-        // });
+        const token = signAuthJwt(payload);
 
-        return NextResponse.redirect(new URL("/explore", baseUrl));
+        const res = NextResponse.redirect(new URL("/explore", baseUrl));
 
+        res.cookies.set("auth", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: Number(cookieExpiresIn),                
+        });
+
+        return res;
     }
 }
