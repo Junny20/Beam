@@ -26,10 +26,10 @@ export const NavBar = () => {
             </div>
             <div className="text-right">
                 <Link
-                    href={username ? '/profile' : '/login'}
+                    href={username ? '/profile' : '/api/auth/steam'}
                     className="px-3 py-1 whitespace-nowrap inline-block"
                 >
-                    {username ?? 'Sign In'}
+                    {username ?? 'Sign in with Steam'}
                 </Link>
 
                 <div className="hidden group-hover:block group-focus-within:block absolute right-0 top-full w-50 bg-gray-300">
