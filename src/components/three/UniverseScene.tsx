@@ -7,45 +7,6 @@ import GhostNode from './GhostNode';
 import type { Game } from '@/data/mockGames';
 import { gameData, ghostGames, calculateNodeProperties } from '@/data/mockGames';
 
-// Connection lines between nodes of same genre
-function GenreConnections({ nodes }: { nodes: { game: Game; position: THREE.Vector3 }[] }) {
-  const geometry = useMemo(() => {
-    const positions: number[] = [];
-    const colors: number[] = [];
-    
-    // Connect nodes of the same genre
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        if (nodes[i].game.genre === nodes[j].game.genre) {
-          positions.push(
-            nodes[i].position.x, nodes[i].position.y, nodes[i].position.z,
-            nodes[j].position.x, nodes[j].position.y, nodes[j].position.z
-          );
-          
-          const color = new THREE.Color(nodes[i].game.color);
-          colors.push(color.r, color.g, color.b);
-          colors.push(color.r, color.g, color.b);
-        }
-      }
-    }
-    
-    const geo = new THREE.BufferGeometry();
-    if (positions.length > 0) {
-      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-      geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-    }
-    return geo;
-  }, [nodes]);
-  
-  if (geometry.attributes.position?.count === 0) return null;
-  
-  return (
-    <lineSegments geometry={geometry}>
-      <lineBasicMaterial vertexColors transparent opacity={0.15} />
-    </lineSegments>
-  );
-}
-
 // Central star/core of the universe
 function CentralCore() {
   const coreRef = useRef<THREE.Mesh>(null);
@@ -129,35 +90,12 @@ function CentralCore() {
         />
       </mesh>
       
-      {/* Label */}
       <Html center distanceFactor={6}>
-        <div className="text-center pointer-events-none">
-          <p className="text-xs text-purple-light/70 uppercase tracking-widest">Your Universe</p>
+        <div className="text-center">
+          <p className="text-xs text-purple-light/70 uppercase tracking-widest">Your Games</p>
         </div>
       </Html>
     </group>
-  );
-}
-
-// Background nebula effect
-function NebulaBackground() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.z += 0.0005;
-    }
-  });
-  
-  return (
-    <mesh ref={meshRef} position={[0, 0, -20]}>
-      <planeGeometry args={[60, 60]} />
-      <meshBasicMaterial
-        color="#1a0f2e"
-        transparent
-        opacity={0.5}
-      />
-    </mesh>
   );
 }
 
@@ -225,9 +163,6 @@ function Scene({
       <pointLight position={[10, 10, 10]} intensity={0.5} color="#7b68ee" />
       <pointLight position={[-10, -10, 5]} intensity={0.3} color="#9b7eed" />
       
-      {/* Background */}
-      <NebulaBackground />
-      
       {/* Stars */}
       <Stars
         radius={80}
@@ -242,13 +177,10 @@ function Scene({
       {/* Central core */}
       <CentralCore />
       
-      {/* Genre connections */}
-      <GenreConnections nodes={gameNodes} />
-      
       {/* Real game nodes */}
       {gameNodes.map(({ game, position }, i) => (
         <GameNode
-          key={game.id}
+          key={`game-${game.id}`}
           game={game}
           position={position}
           onClick={() => handleNodeClick(game, i)}
@@ -260,16 +192,16 @@ function Scene({
       ))}
       
       {/* Ghost nodes for discovery */}
-      {ghostNodePositions.map(({ game, position }, i) => (
+      {/* {ghostNodePositions.map(({ game, position }, i) => (
         <GhostNode
-          key={game.id}
+          key={`ghost-${game.id}`}
           game={game}
           position={position}
           onHover={(hovered) => setHoveredGhost(hovered ? i : null)}
           isHovered={hoveredGhost === i}
           index={i}
         />
-      ))}
+      ))} */}
       
       {/* Orbit controls */}
       <OrbitControls
