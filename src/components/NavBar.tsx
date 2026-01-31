@@ -45,6 +45,13 @@ export const NavBar = () => {
                     }`}
                 >
                     {username ?? 'Sign In'}
+                    <Image
+                        src={profileIcon}
+                        alt="profile icon"
+                        width={18}
+                        height={18}
+                        className="h-4 w-4 object-contain filter brightness-0 invert"
+                    />
                 </Link>
                 <div className="absolute right-0 top-full hidden group-hover:block group-focus-within:block w-32 bg-gray-200 text-black text-center">
                     <Link
