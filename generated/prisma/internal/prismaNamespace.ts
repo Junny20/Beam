@@ -384,7 +384,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  OwnedGame: 'OwnedGame'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +401,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user"
+    modelProps: "user" | "ownedGame"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OwnedGame: {
+      payload: Prisma.$OwnedGamePayload<ExtArgs>
+      fields: Prisma.OwnedGameFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OwnedGameFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OwnedGameFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>
+        }
+        findFirst: {
+          args: Prisma.OwnedGameFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OwnedGameFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>
+        }
+        findMany: {
+          args: Prisma.OwnedGameFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>[]
+        }
+        create: {
+          args: Prisma.OwnedGameCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>
+        }
+        createMany: {
+          args: Prisma.OwnedGameCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OwnedGameCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>[]
+        }
+        delete: {
+          args: Prisma.OwnedGameDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>
+        }
+        update: {
+          args: Prisma.OwnedGameUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>
+        }
+        deleteMany: {
+          args: Prisma.OwnedGameDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OwnedGameUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OwnedGameUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>[]
+        }
+        upsert: {
+          args: Prisma.OwnedGameUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OwnedGamePayload>
+        }
+        aggregate: {
+          args: Prisma.OwnedGameAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOwnedGame>
+        }
+        groupBy: {
+          args: Prisma.OwnedGameGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnedGameGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OwnedGameCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OwnedGameCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -532,6 +607,23 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const OwnedGameScalarFieldEnum = {
+  id: 'id',
+  appid: 'appid',
+  name: 'name',
+  icon: 'icon',
+  genre: 'genre',
+  playtimeForever: 'playtimeForever',
+  playtime2Weeks: 'playtime2Weeks',
+  lastPlayedAt: 'lastPlayedAt',
+  achievementsUnlocked: 'achievementsUnlocked',
+  achievementsTotal: 'achievementsTotal',
+  userId: 'userId'
+} as const
+
+export type OwnedGameScalarFieldEnum = (typeof OwnedGameScalarFieldEnum)[keyof typeof OwnedGameScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -715,6 +807,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  ownedGame?: Prisma.OwnedGameOmit
 }
 
 /* Types for Logging */

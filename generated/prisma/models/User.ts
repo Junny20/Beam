@@ -276,6 +276,7 @@ export type UserWhereInput = {
   locCountryCode?: Prisma.StringNullableFilter<"User"> | string | null
   lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  ownedGames?: Prisma.OwnedGameListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -290,6 +291,7 @@ export type UserOrderByWithRelationInput = {
   locCountryCode?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  ownedGames?: Prisma.OwnedGameOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -307,6 +309,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   locCountryCode?: Prisma.StringNullableFilter<"User"> | string | null
   lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  ownedGames?: Prisma.OwnedGameListRelationFilter
 }, "id" | "steamId64">
 
 export type UserOrderByWithAggregationInput = {
@@ -357,6 +360,7 @@ export type UserCreateInput = {
   locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
+  ownedGames?: Prisma.OwnedGameCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -371,6 +375,7 @@ export type UserUncheckedCreateInput = {
   locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
+  ownedGames?: Prisma.OwnedGameUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -385,6 +390,7 @@ export type UserUpdateInput = {
   locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownedGames?: Prisma.OwnedGameUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -399,6 +405,7 @@ export type UserUncheckedUpdateInput = {
   locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownedGames?: Prisma.OwnedGameUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -499,6 +506,11 @@ export type UserSumOrderByAggregateInput = {
   timeCreated?: Prisma.SortOrder
 }
 
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -523,6 +535,121 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type UserCreateNestedOneWithoutOwnedGamesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedGamesInput, Prisma.UserUncheckedCreateWithoutOwnedGamesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedGamesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOwnedGamesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedGamesInput, Prisma.UserUncheckedCreateWithoutOwnedGamesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedGamesInput
+  upsert?: Prisma.UserUpsertWithoutOwnedGamesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOwnedGamesInput, Prisma.UserUpdateWithoutOwnedGamesInput>, Prisma.UserUncheckedUpdateWithoutOwnedGamesInput>
+}
+
+export type UserCreateWithoutOwnedGamesInput = {
+  id?: string
+  steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
+  lastSyncAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type UserUncheckedCreateWithoutOwnedGamesInput = {
+  id?: string
+  steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
+  lastSyncAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type UserCreateOrConnectWithoutOwnedGamesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedGamesInput, Prisma.UserUncheckedCreateWithoutOwnedGamesInput>
+}
+
+export type UserUpsertWithoutOwnedGamesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOwnedGamesInput, Prisma.UserUncheckedUpdateWithoutOwnedGamesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedGamesInput, Prisma.UserUncheckedCreateWithoutOwnedGamesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOwnedGamesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOwnedGamesInput, Prisma.UserUncheckedUpdateWithoutOwnedGamesInput>
+}
+
+export type UserUpdateWithoutOwnedGamesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserUncheckedUpdateWithoutOwnedGamesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type UserCountOutputType
+ */
+
+export type UserCountOutputType = {
+  ownedGames: number
+}
+
+export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  ownedGames?: boolean | UserCountOutputTypeCountOwnedGamesArgs
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserCountOutputType
+   */
+  select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOwnedGamesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OwnedGameWhereInput
+}
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,6 +664,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   locCountryCode?: boolean
   lastSyncAt?: boolean
   createdAt?: boolean
+  ownedGames?: boolean | Prisma.User$ownedGamesArgs<ExtArgs>
+  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -582,10 +711,18 @@ export type UserSelectScalar = {
 }
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamId64" | "personaName" | "avatar" | "visibility" | "personaState" | "lastLogOff" | "timeCreated" | "locCountryCode" | "lastSyncAt" | "createdAt", ExtArgs["result"]["user"]>
+export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  ownedGames?: boolean | Prisma.User$ownedGamesArgs<ExtArgs>
+  _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
-  objects: {}
+  objects: {
+    ownedGames: Prisma.$OwnedGamePayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     steamId64: string
@@ -992,6 +1129,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  ownedGames<T extends Prisma.User$ownedGamesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedGamesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnedGamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1049,6 +1187,10 @@ export type UserFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1067,6 +1209,10 @@ export type UserFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which User to fetch.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1084,6 +1230,10 @@ export type UserFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * Filter, which User to fetch.
    */
@@ -1133,6 +1283,10 @@ export type UserFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which User to fetch.
    */
   where?: Prisma.UserWhereInput
@@ -1181,6 +1335,10 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter, which Users to fetch.
    */
   where?: Prisma.UserWhereInput
@@ -1223,6 +1381,10 @@ export type UserCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * The data needed to create a User.
    */
@@ -1271,6 +1433,10 @@ export type UserUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
   /**
    * The data needed to update a User.
    */
@@ -1338,6 +1504,10 @@ export type UserUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * The filter to search for the User to update in case it exists.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1364,6 +1534,10 @@ export type UserDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  /**
    * Filter which User to delete.
    */
   where: Prisma.UserWhereUniqueInput
@@ -1384,6 +1558,30 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.ownedGames
+ */
+export type User$ownedGamesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OwnedGame
+   */
+  select?: Prisma.OwnedGameSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OwnedGame
+   */
+  omit?: Prisma.OwnedGameOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OwnedGameInclude<ExtArgs> | null
+  where?: Prisma.OwnedGameWhereInput
+  orderBy?: Prisma.OwnedGameOrderByWithRelationInput | Prisma.OwnedGameOrderByWithRelationInput[]
+  cursor?: Prisma.OwnedGameWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OwnedGameScalarFieldEnum | Prisma.OwnedGameScalarFieldEnum[]
+}
+
+/**
  * User without action
  */
 export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1395,4 +1593,8 @@ export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the User
    */
   omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
 }

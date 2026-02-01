@@ -60,23 +60,11 @@ export default function ProfilePage() {
     const [games, setGames] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-<<<<<<< HEAD
   useEffect(() => {
     const loadProfileAndGames = async () => {
       try {
         // Load profile
         let res = await fetch("/api/profile");
-=======
-    useEffect(() => {
-        console.log(games);
-    }, [games]);
-
-    useEffect(() => {
-        const loadProfileAndGames = async () => {
-            try {
-                // Load profile
-                let res = await fetch('/api/profile');
->>>>>>> 2fcc378b66681668253ca297caaeb1570541b25a
 
                 if (res.status === 401) {
                     window.location.href = '/login';
@@ -119,13 +107,7 @@ export default function ProfilePage() {
         return <div>No profile</div>;
     }
 
-<<<<<<< HEAD
   const status = personaStateLabel(profile.personaState);
-=======
-    console.log(profile);
-
-    const status = personaStateLabel(profile.personaState);
->>>>>>> 2fcc378b66681668253ca297caaeb1570541b25a
 
     return (
         <div className="p-6">
@@ -331,11 +313,7 @@ function PlaytimeSection({
 }: {
     games: { appid: number; name: string; playtime_forever: number }[];
 }) {
-<<<<<<< HEAD
   const { totalHours, top5 } = buildPlaytimeStats(games);
-=======
-    const { totalHours, top5 } = buildPlaytimeStats(games);
->>>>>>> 2fcc378b66681668253ca297caaeb1570541b25a
 
     return (
         <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">

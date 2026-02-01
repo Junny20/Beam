@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider   = \"prisma-client\"\n  output     = \"../generated/prisma\"\n  engineType = \"client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String @id @default(cuid())\n  steamId64 String @unique\n\n  personaName    String?\n  avatar         String?\n  visibility     Int?\n  personaState   Int? // online/offline... \n  lastLogOff     Int?\n  timeCreated    Int?\n  locCountryCode String?\n\n  lastSyncAt DateTime?\n\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchema": "generator client {\n  provider   = \"prisma-client\"\n  output     = \"../generated/prisma\"\n  engineType = \"client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String @id @default(cuid())\n  steamId64 String @unique\n\n  personaName    String?\n  avatar         String?\n  visibility     Int?\n  personaState   Int? // online/offline... \n  lastLogOff     Int?\n  timeCreated    Int?\n  locCountryCode String?\n\n  lastSyncAt DateTime?\n\n  ownedGames OwnedGame[]\n\n  createdAt DateTime @default(now())\n}\n\nmodel OwnedGame {\n  id String @id @default(cuid())\n\n  appid Int\n  name  String\n  icon  String? // Steam img_icon_url\n  genre String? // nullable, enrich later\n\n  playtimeForever Int // minutes\n  playtime2Weeks  Int? // minutes\n  lastPlayedAt    DateTime?\n\n  achievementsUnlocked Int?\n  achievementsTotal    Int?\n\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId String\n\n  @@unique([userId, appid])\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"steamId64\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"personaName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visibility\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"personaState\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastLogOff\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeCreated\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"locCountryCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastSyncAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"steamId64\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"personaName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visibility\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"personaState\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastLogOff\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeCreated\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"locCountryCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastSyncAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"ownedGames\",\"kind\":\"object\",\"type\":\"OwnedGame\",\"relationName\":\"OwnedGameToUser\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"OwnedGame\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"appid\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"icon\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"genre\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"playtimeForever\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"playtime2Weeks\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastPlayedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"achievementsUnlocked\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"achievementsTotal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OwnedGameToUser\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -185,6 +185,16 @@ export interface PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.ownedGame`: Exposes CRUD operations for the **OwnedGame** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OwnedGames
+    * const ownedGames = await prisma.ownedGame.findMany()
+    * ```
+    */
+  get ownedGame(): Prisma.OwnedGameDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

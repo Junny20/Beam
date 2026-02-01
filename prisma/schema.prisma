@@ -21,6 +21,29 @@ model User {
   locCountryCode String?
 
   lastSyncAt DateTime?
+  
+  ownedGames  OwnedGame[]
 
   createdAt DateTime @default(now())
+}
+
+model OwnedGame {
+  id        String   @id @default(cuid())
+
+  appid     Int
+  name      String
+  icon      String?        // Steam img_icon_url
+  genre     String?        // nullable, enrich later
+
+  playtimeForever Int      // minutes
+  playtime2Weeks  Int?     // minutes
+  lastPlayedAt    DateTime?
+
+  achievementsUnlocked Int?
+  achievementsTotal    Int?
+
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+
+  @@unique([userId, appid])
 }
