@@ -73,6 +73,11 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   id: 'id',
   steamId64: 'steamId64',
+  personaName: 'personaName',
+  avatar: 'avatar',
+  visibility: 'visibility',
+  personaState: 'personaState',
+  lastSyncAt: 'lastSyncAt',
   createdAt: 'createdAt'
 } as const
 
@@ -93,4 +98,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

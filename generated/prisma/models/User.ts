@@ -20,45 +20,97 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  visibility: number | null
+  personaState: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  visibility: number | null
+  personaState: number | null
 }
 
 export type UserMinAggregateOutputType = {
   id: string | null
   steamId64: string | null
+  personaName: string | null
+  avatar: string | null
+  visibility: number | null
+  personaState: number | null
+  lastSyncAt: Date | null
   createdAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
   steamId64: string | null
+  personaName: string | null
+  avatar: string | null
+  visibility: number | null
+  personaState: number | null
+  lastSyncAt: Date | null
   createdAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
   steamId64: number
+  personaName: number
+  avatar: number
+  visibility: number
+  personaState: number
+  lastSyncAt: number
   createdAt: number
   _all: number
 }
 
 
+export type UserAvgAggregateInputType = {
+  visibility?: true
+  personaState?: true
+}
+
+export type UserSumAggregateInputType = {
+  visibility?: true
+  personaState?: true
+}
+
 export type UserMinAggregateInputType = {
   id?: true
   steamId64?: true
+  personaName?: true
+  avatar?: true
+  visibility?: true
+  personaState?: true
+  lastSyncAt?: true
   createdAt?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
   steamId64?: true
+  personaName?: true
+  avatar?: true
+  visibility?: true
+  personaState?: true
+  lastSyncAt?: true
   createdAt?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
   steamId64?: true
+  personaName?: true
+  avatar?: true
+  visibility?: true
+  personaState?: true
+  lastSyncAt?: true
   createdAt?: true
   _all?: true
 }
@@ -101,6 +153,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -131,6 +195,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -138,8 +204,15 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   id: string
   steamId64: string
+  personaName: string | null
+  avatar: string | null
+  visibility: number | null
+  personaState: number | null
+  lastSyncAt: Date | null
   createdAt: Date
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -165,12 +238,22 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
   steamId64?: Prisma.StringFilter<"User"> | string
+  personaName?: Prisma.StringNullableFilter<"User"> | string | null
+  avatar?: Prisma.StringNullableFilter<"User"> | string | null
+  visibility?: Prisma.IntNullableFilter<"User"> | number | null
+  personaState?: Prisma.IntNullableFilter<"User"> | number | null
+  lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  personaName?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatar?: Prisma.SortOrderInput | Prisma.SortOrder
+  visibility?: Prisma.SortOrderInput | Prisma.SortOrder
+  personaState?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -180,16 +263,28 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  personaName?: Prisma.StringNullableFilter<"User"> | string | null
+  avatar?: Prisma.StringNullableFilter<"User"> | string | null
+  visibility?: Prisma.IntNullableFilter<"User"> | number | null
+  personaState?: Prisma.IntNullableFilter<"User"> | number | null
+  lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }, "id" | "steamId64">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  personaName?: Prisma.SortOrderInput | Prisma.SortOrder
+  avatar?: Prisma.SortOrderInput | Prisma.SortOrder
+  visibility?: Prisma.SortOrderInput | Prisma.SortOrder
+  personaState?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -198,71 +293,152 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   steamId64?: Prisma.StringWithAggregatesFilter<"User"> | string
+  personaName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  visibility?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  personaState?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  lastSyncAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
   id?: string
   steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastSyncAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastSyncAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserCreateManyInput = {
   id?: string
   steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastSyncAt?: Date | string | null
   createdAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  personaName?: Prisma.SortOrder
+  avatar?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  personaState?: Prisma.SortOrder
+  lastSyncAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  visibility?: Prisma.SortOrder
+  personaState?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  personaName?: Prisma.SortOrder
+  avatar?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  personaState?: Prisma.SortOrder
+  lastSyncAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  personaName?: Prisma.SortOrder
+  avatar?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  personaState?: Prisma.SortOrder
+  lastSyncAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  visibility?: Prisma.SortOrder
+  personaState?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -274,28 +450,48 @@ export type DateTimeFieldUpdateOperationsInput = {
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   steamId64?: boolean
+  personaName?: boolean
+  avatar?: boolean
+  visibility?: boolean
+  personaState?: boolean
+  lastSyncAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   steamId64?: boolean
+  personaName?: boolean
+  avatar?: boolean
+  visibility?: boolean
+  personaState?: boolean
+  lastSyncAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   steamId64?: boolean
+  personaName?: boolean
+  avatar?: boolean
+  visibility?: boolean
+  personaState?: boolean
+  lastSyncAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
   steamId64?: boolean
+  personaName?: boolean
+  avatar?: boolean
+  visibility?: boolean
+  personaState?: boolean
+  lastSyncAt?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamId64" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamId64" | "personaName" | "avatar" | "visibility" | "personaState" | "lastSyncAt" | "createdAt", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
@@ -303,6 +499,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     steamId64: string
+    personaName: string | null
+    avatar: string | null
+    visibility: number | null
+    personaState: number | null
+    lastSyncAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -729,6 +930,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly steamId64: Prisma.FieldRef<"User", 'String'>
+  readonly personaName: Prisma.FieldRef<"User", 'String'>
+  readonly avatar: Prisma.FieldRef<"User", 'String'>
+  readonly visibility: Prisma.FieldRef<"User", 'Int'>
+  readonly personaState: Prisma.FieldRef<"User", 'Int'>
+  readonly lastSyncAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     

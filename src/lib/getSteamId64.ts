@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { verifyAuthJwt } from "./auth";
 
 export function getSteamId64(req: NextRequest) {

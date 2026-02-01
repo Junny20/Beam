@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { AuthPayload, signAuthJwt } from "@/lib/auth";
+import { syncProfile } from "@/lib/sync/profile";
 
 const baseUrl = process.env.BASE_URL!;
 const cookieExpiresIn = process.env.COOKIE_EXPIRES_IN!;
@@ -97,6 +98,8 @@ export async function GET(req: Request) {
             path: "/",
             maxAge: Number(cookieExpiresIn),                
         });
+
+        void syncProfile(steamId64).catch(console.error);
 
         return res;
     }
