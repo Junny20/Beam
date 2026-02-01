@@ -20,7 +20,7 @@ export default function GhostNode({
     index,
 }: GhostNodeProps) {
     const meshRef = useRef<THREE.Mesh>(null);
-    const glowRef = useRef<THREE.Mesh>(null);
+    const glowRef = useRef<THREE.Sprite>(null);
     const ringRef = useRef<THREE.Mesh>(null);
 
     const size = 0.5;
@@ -31,13 +31,13 @@ export default function GhostNode({
         if (meshRef.current) {
             // Gentle floating - slower than real nodes
             meshRef.current.position.y =
-                position.y + Math.sin(time * 0.2 + index * 0.7) * 0.1;
+                Math.sin(time * 0.2 + index * 0.7) * 0.1;
 
             // Slow rotation
             meshRef.current.rotation.y += 0.003;
 
             // Scale on hover
-            const targetScale = isHovered ? 1.2 : 1;
+            const targetScale = isHovered ? 1.3 : 1;
             meshRef.current.scale.lerp(
                 new THREE.Vector3(targetScale, targetScale, targetScale),
                 0.1,
@@ -46,7 +46,7 @@ export default function GhostNode({
 
         if (glowRef.current) {
             // Subtle pulse
-            const pulse = 1 + Math.sin(time * 1.5 + index) * 0.1;
+            const pulse = 1 + Math.sin(time * 1.5 + index) * 0.2;
             glowRef.current.scale.setScalar(pulse);
         }
 
@@ -59,17 +59,18 @@ export default function GhostNode({
     return (
         <group position={position}>
             {/* Muted glow */}
-            <mesh ref={glowRef} position={[0, 0, -0.2]}>
-                <planeGeometry args={[size * 3, size * 3]} />
-                <meshBasicMaterial
+            <sprite
+                ref={glowRef}
+                position={[0, 0, -0.2]}
+                scale={[size * 4, size * 4, 1]}
+            >
+                <spriteMaterial
                     color={game.color}
                     transparent
-                    opacity={0.08}
-                    depthWrite={false}
+                    opacity={0.15}
                     blending={THREE.AdditiveBlending}
-                    side={THREE.DoubleSide}
                 />
-            </mesh>
+            </sprite>
 
             {/* Dashed ring effect - using multiple segments */}
             {[0, 1, 2, 3].map((i) => (
@@ -84,7 +85,7 @@ export default function GhostNode({
                     <meshBasicMaterial
                         color={game.color}
                         transparent
-                        opacity={0.4}
+                        opacity={0.6}
                         side={THREE.DoubleSide}
                     />
                 </mesh>
@@ -102,7 +103,9 @@ export default function GhostNode({
                     metalness={0.3}
                     roughness={0.7}
                     transparent
-                    opacity={0.4}
+                    opacity={0.6}
+                    emissive={game.color}
+                    emissiveIntensity={0.2}
                 />
             </mesh>
 
@@ -118,13 +121,14 @@ export default function GhostNode({
             </mesh>
 
             {/* Ghost indicator */}
-            <mesh position={[0, 0, size * 1.2]}>
+            <mesh position={[0, 0, 0]}>
                 <ringGeometry args={[0.15, 0.2, 16]} />
                 <meshBasicMaterial
                     color="#ffffff"
                     transparent
                     opacity={0.5}
                     side={THREE.DoubleSide}
+                    depthTest={false}
                 />
             </mesh>
 
