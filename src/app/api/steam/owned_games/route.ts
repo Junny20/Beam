@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const games = await getOwnedGames(steamId64, steamApiKey);
+    // console.log(games);
     return NextResponse.json(games, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: `Internal Server Error: ${pathname}` }, { status: 500 });
