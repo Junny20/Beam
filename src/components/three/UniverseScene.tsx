@@ -192,7 +192,7 @@ function Scene({
       ))}
       
       {/* Ghost nodes for discovery */}
-      {/* {ghostNodePositions.map(({ game, position }, i) => (
+      {ghostNodePositions.map(({ game, position }, i) => (
         <GhostNode
           key={`ghost-${game.id}`}
           game={game}
@@ -201,7 +201,7 @@ function Scene({
           isHovered={hoveredGhost === i}
           index={i}
         />
-      ))} */}
+      ))}
       
       {/* Orbit controls */}
       <OrbitControls

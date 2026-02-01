@@ -12,6 +12,7 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 import ghostPfp from '@/public/ghostpfp.jpg';
+import Backlogs from './Backlogs';
 
 function formatUnix(ts?: number) {
     if (!ts) return 'Unknown';
@@ -272,6 +273,7 @@ function PlaytimeSection({
                     }))}
                 />
             </div>
+            <Backlogs />
         </div>
     );
 }

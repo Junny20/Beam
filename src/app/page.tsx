@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import Head from 'next/head';
 
 interface ChatMessage {
     id: string;
@@ -94,7 +93,6 @@ function ParticleUniverse() {
             positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
             positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
 
-            // Steam-like color palette (blues, cyans, whites)
             const colorChoice = Math.random();
             if (colorChoice > 0.7) {
                 colors[i * 3] = 0.8 + Math.random() * 0.2;
@@ -128,7 +126,6 @@ function ParticleUniverse() {
         mesh.current.rotation.x =
             Math.sin(state.clock.elapsedTime * 0.03) * 0.1;
 
-        // Subtle parallax based on mouse
         mesh.current.rotation.y += mouseRef.current.x * 0.001;
         mesh.current.rotation.x += mouseRef.current.y * 0.001;
     });
@@ -163,7 +160,6 @@ function ParticleUniverse() {
     );
 }
 
-// NEW: Polyhedron Nodes Component
 function PolyhedronNodes() {
     const groupRef = useRef<THREE.Group>(null);
 
@@ -174,16 +170,16 @@ function PolyhedronNodes() {
             new THREE.OctahedronGeometry(0.7, 0),
             new THREE.TetrahedronGeometry(0.9, 0),
             new THREE.DodecahedronGeometry(0.6, 0),
-            new THREE.IcosahedronGeometry(0.5, 1), // Subdivided for detail
+            new THREE.IcosahedronGeometry(0.5, 1),
         ];
 
         const colors = [
-            new THREE.Color('#ff006e'), // Hot pink
-            new THREE.Color('#fb5607'), // Orange
-            new THREE.Color('#ffbe0b'), // Gold
-            new THREE.Color('#8338ec'), // Purple
-            new THREE.Color('#3a86ff'), // Bright blue
-            new THREE.Color('#06ffa5'), // Mint
+            new THREE.Color('#ff006e'),
+            new THREE.Color('#fb5607'),
+            new THREE.Color('#ffbe0b'),
+            new THREE.Color('#8338ec'),
+            new THREE.Color('#3a86ff'),
+            new THREE.Color('#06ffa5'),
         ];
 
         return Array.from({ length: 15 }, (_, i) => ({
@@ -260,7 +256,6 @@ function PolyhedronNodes() {
     );
 }
 
-// LiveFeed Component remains the same...
 function LiveFeed() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -515,48 +510,6 @@ export default function Home() {
 
                     <div className="lg:col-span-1 h-[400px] lg:h-[500px]">
                         <LiveFeed />
-                    </div>
-                </div>
-
-                {/* Features Strip */}
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-blue-500/50 transition-colors group">
-                        <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <span className="text-2xl">🌌</span>
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">
-                            Universe Visualization
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            Every game is a planet, every achievement a star.
-                            Navigate your personal galaxy.
-                        </p>
-                    </div>
-
-                    <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-purple-500/50 transition-colors group">
-                        <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <span className="text-2xl">🏆</span>
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">
-                            Achievement Hunting
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            Discover your rarest achievements and see how you
-                            compare to global stats.
-                        </p>
-                    </div>
-
-                    <div className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-cyan-500/50 transition-colors group">
-                        <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                            <span className="text-2xl">📊</span>
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">
-                            Wrapped Insights
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            Year-end retrospectives that actually understand
-                            your gaming DNA.
-                        </p>
                     </div>
                 </div>
             </main>
