@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { mockGamesOwned, buildPlaytimeStats } from "@/data/mockUsers";
+import { buildPlaytimeStats } from "@/data/mockUsers";
 import {
   BarChart,
   Bar,
@@ -55,11 +55,15 @@ function visibilityLabel(v?: number) {
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<any>(null);
+  const [games, setGames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {console.log(games)}, [games]);
+
   useEffect(() => {
-    const loadProfile = async () => {
+    const loadProfileAndGames = async () => {
       try {
+        // Load profile
         let res = await fetch("/api/profile");
 
         if (res.status === 401) {
@@ -71,12 +75,20 @@ export default function ProfilePage() {
 
         if (!data.user?.personaName) {
           await fetch("/api/steam/sync/profile", { method: "POST" });
-
           res = await fetch("/api/profile");
           data = await res.json();
         }
 
         setProfile(data.user);
+
+        // Load owned games
+        const gamesRes = await fetch("/api/steam/owned_games");
+        if (!gamesRes.ok) {
+          throw new Error("Failed to load owned games");
+        }
+
+        const games = await gamesRes.json();
+        setGames(games ?? []);
       } catch (err) {
         console.error(err);
       } finally {
@@ -84,20 +96,20 @@ export default function ProfilePage() {
       }
     };
 
-    loadProfile();
+    loadProfileAndGames();
   }, []);
 
   if (loading) {
-    return <div>Loading</div>
+    return <div>Loading</div>;
   }
 
   if (!profile) {
-    return <div>No profile</div>
+    return <div>No profile</div>;
   }
 
   console.log(profile);
 
-  const status = personaStateLabel(profile.personastate);
+  const status = personaStateLabel(profile.personaState);
 
   return (
     <div className="p-6">
@@ -131,7 +143,7 @@ export default function ProfilePage() {
             <div className="flex flex-wrap gap-3 mt-2">
               {profile.steamId64 && (
                 <a
-                  href={`https://steamcommunity.com/${profile.steamId64}`}
+                  href={`https://steamcommunity.com/profiles/${profile.steamId64}`}
                   target="_blank"
                   rel="noreferrer"
                   className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-sm"
@@ -165,7 +177,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      <PlaytimeSection games={mockGamesOwned} />
+      <PlaytimeSection games={games} />
     </div>
   );
 }
@@ -177,21 +189,6 @@ function InfoRow({ label, value }: { label: string; value: string }) {
       <p className="text-white/90 break-words text-xl text-center mt-[10px]">
         {value}
       </p>
-    </div>
-  );
-}
-
-function Panel({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-      <h2 className="text-lg font-semibold">{title}</h2>
-      <div className="mt-3">{children}</div>
     </div>
   );
 }
@@ -221,9 +218,10 @@ function PlaytimeSection({
 }: {
   games: { appid: number; name: string; playtime_forever: number }[];
 }) {
+    console.log("this runs.");
   const { totalHours, top5 } = buildPlaytimeStats(games);
-
-  const max = Math.max(...top5.map((g) => g.hours), 1);
+  console.log(totalHours);
+  console.log(top5);
 
   return (
     <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">
@@ -244,38 +242,22 @@ function PlaytimeSection({
       </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top 5 list */}
         <div className="rounded-xl bg-black/20 border border-white/10 p-4">
           <p className="text-sm text-white/70 mb-3">Top 5 Games</p>
           <div className="flex flex-col gap-3">
             {top5.map((g, i) => (
-              <div
-                key={g.appid}
-                className="flex items-center justify-between gap-3"
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-medium">
-                    {i + 1}. {g.name}
-                  </p>
-                  <p className="text-xs text-white/60">{g.appid}</p>
-                </div>
-                <p className="shrink-0 text-white/90">
-                  {g.hours.toLocaleString()} hrs
+              <div key={g.appid} className="flex justify-between">
+                <p className="truncate font-medium">
+                  {i + 1}. {g.name}
                 </p>
+                <p>{g.hours} hrs</p>
               </div>
             ))}
           </div>
         </div>
 
-        <PlaytimeChart
-          top5={top5.map((g) => ({
-            appid: g.appid,
-            name: g.name ?? "Unknown",
-            hours: g.hours,
-          }))}
-        />
+        <PlaytimeChart top5={top5} />
       </div>
-      <Backlogs />
     </div>
   );
 }

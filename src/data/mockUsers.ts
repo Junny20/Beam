@@ -54,21 +54,23 @@ export type OwnedGame = {
     playtime_2weeks?: number;
 };
 
-export function buildPlaytimeStats(games: OwnedGame[]) {
-    const withHours = games.map((g) => ({
-        ...g,
-        hours: Math.round((g.playtime_forever / 60) * 10) / 10,
-    }));
+export function buildPlaytimeStats(
+  games: { appid: number; name: string; playtime_forever: number }[]
+) {
+  const withHours = games.map((g) => ({
+    appid: g.appid,
+    name: g.name,
+    hours: Math.floor(g.playtime_forever / 60),
+  }));
 
-    const totalHours =
-        Math.round(
-            (withHours.reduce((sum, g) => sum + g.hours, 0) + Number.EPSILON) *
-                10,
-        ) / 10;
+  const totalHours = withHours.reduce((sum, g) => sum + g.hours, 0);
 
-    const top5 = [...withHours].sort((a, b) => b.hours - a.hours).slice(0, 5);
+  const top5 = withHours
+    .filter((g) => g.hours > 0)
+    .sort((a, b) => b.hours - a.hours)
+    .slice(0, 5);
 
-    return { totalHours, top5 };
+  return { totalHours, top5 };
 }
 
 export const mockOwnedGames: OwnedGame[] = [
