@@ -52,7 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  OwnedGame: 'OwnedGame'
+  OwnedGame: 'OwnedGame',
+  Friend: 'Friend'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -103,6 +104,18 @@ export const OwnedGameScalarFieldEnum = {
 } as const
 
 export type OwnedGameScalarFieldEnum = (typeof OwnedGameScalarFieldEnum)[keyof typeof OwnedGameScalarFieldEnum]
+
+
+export const FriendScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  friendId: 'friendId',
+  since: 'since',
+  isFavorite: 'isFavorite',
+  isHidden: 'isHidden'
+} as const
+
+export type FriendScalarFieldEnum = (typeof FriendScalarFieldEnum)[keyof typeof FriendScalarFieldEnum]
 
 
 export const SortOrder = {

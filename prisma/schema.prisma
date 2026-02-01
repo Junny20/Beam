@@ -23,6 +23,10 @@ model User {
   lastSyncAt DateTime?
   
   ownedGames  OwnedGame[]
+  
+   // Friend relations
+  friendsInitiated Friend[] @relation("FriendsInitiated")
+  friendsReceived  Friend[] @relation("FriendsReceived")
 
   createdAt DateTime @default(now())
 }
@@ -46,4 +50,22 @@ model OwnedGame {
   userId  String
 
   @@unique([userId, appid])
+}
+
+model Friend {
+  id String @id @default(cuid())
+
+  user   User   @relation("FriendsInitiated", fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  // The friend being referenced
+  friend   User   @relation("FriendsReceived", fields: [friendId], references: [id], onDelete: Cascade)
+  friendId String
+
+  since        DateTime?
+  isFavorite  Boolean   @default(false)
+  isHidden    Boolean   @default(false) // privacy toggle
+
+  @@unique([userId, friendId])
+  @@index([friendId])
 }

@@ -27,3 +27,8 @@ export type User = Prisma.UserModel
  * 
  */
 export type OwnedGame = Prisma.OwnedGameModel
+/**
+ * Model Friend
+ * 
+ */
+export type Friend = Prisma.FriendModel

@@ -10,4 +10,5 @@
  */
 export type * from './models/User'
 export type * from './models/OwnedGame'
+export type * from './models/Friend'
 export type * from './commonInputTypes'
