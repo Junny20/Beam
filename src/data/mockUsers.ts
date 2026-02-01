@@ -38,15 +38,6 @@ export const mockUser: User = {
     loccityid: 3961,
 };
 
-export const mockGamesOwned = [
-    { appid: 730, name: 'Counter-Strike 2', playtime_forever: 12345 },
-    { appid: 570, name: 'Dota 2', playtime_forever: 8040 },
-    { appid: 440, name: 'Team Fortress 2', playtime_forever: 2400 },
-    { appid: 271590, name: 'GTA V', playtime_forever: 1800 },
-    { appid: 1091500, name: 'Cyberpunk 2077', playtime_forever: 920 },
-    { appid: 945360, name: 'Among Us', playtime_forever: 260 },
-];
-
 export type OwnedGame = {
     appid: number;
     name?: string;

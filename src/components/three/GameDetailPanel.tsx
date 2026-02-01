@@ -1,5 +1,4 @@
 // SHOWS PERSONAL INFO WHEN I CLICK ON A GAME NODE
-
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import type { Game } from '@/data/mockGames';
@@ -45,7 +44,7 @@ export default function GameDetailPanel({ game, onClose }: GameDetailPanelProps)
   if (!game) return null;
   
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4">
+    <div className="absolute mt-[55px] inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-50 p-4">
       <div
         ref={panelRef}
         className="bg-bg-darker border border-purple-secondary/40 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-glow-lg"

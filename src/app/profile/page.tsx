@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { buildPlaytimeStats } from '@/data/mockUsers';
 import {
@@ -60,11 +59,11 @@ export default function ProfilePage() {
     const [games, setGames] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadProfileAndGames = async () => {
-      try {
-        // Load profile
-        let res = await fetch("/api/profile");
+    useEffect(() => {
+        const loadProfileAndGames = async () => {
+            try {
+                // Load profile
+                let res = await fetch('/api/profile');
 
                 if (res.status === 401) {
                     window.location.href = '/login';
@@ -107,73 +106,130 @@ export default function ProfilePage() {
         return <div>No profile</div>;
     }
 
-  const status = personaStateLabel(profile.personaState);
+    const status = personaStateLabel(profile.personaState);
 
     return (
         <div className="p-6">
-            <div className="flex flex-col md:flex-row gap-8 p-8 rounded-2xl bg-white/5 border border-white/10 mt-[60px]">
-                <div className="shrink-0">
-                    <div className="relative w-[200px] h-[200px] rounded-[30px] overflow-hidden border border-white/10">
-                        <Image
-                            src={profile.avatar}
-                            alt="User Avatar"
-                            fill
-                            className="object-cover"
-                            sizes="200px"
-                            priority
-                        />
+            {/* Profile Header - Universe Theme */}
+            <div className="relative flex flex-col md:flex-row gap-8 p-8 rounded-2xl bg-black/40 border border-purple-500/20 backdrop-blur-md mt-[60px] overflow-hidden group">
+                {/* Animated gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Top gradient line */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-cyan-500 to-purple-500" />
+
+                {/* Glow effects */}
+                <div className="absolute -top-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
+
+                {/* Avatar Section */}
+                <div className="shrink-0 relative z-10">
+                    <div className="relative">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-[32px] blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
+                        <div className="relative w-[200px] h-[200px] rounded-[30px] overflow-hidden border-2 border-white/10 bg-gray-900">
+                            <Image
+                                src={profile.avatar}
+                                alt="User Avatar"
+                                fill
+                                className="object-cover"
+                                sizes="200px"
+                                priority
+                            />
+                        </div>
                     </div>
 
-                    <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 border border-white/10">
+                    {/* Status Badge */}
+                    <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/50 border border-white/10 backdrop-blur-sm">
                         <span
-                            className={`w-2.5 h-2.5 rounded-full ${status.dot}`}
+                            className={`w-2.5 h-2.5 rounded-full ${status.dot} animate-pulse shadow-[0_0_8px_currentColor]`}
                         />
-                        <span className="text-sm text-white/90">
+                        <span className="text-sm font-medium text-white/90">
                             {status.label}
                         </span>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 w-full min-w-0">
-                    <div className="flex flex-col gap-1">
-                        <h1 className="text-5xl font-bold truncate">
-                            {profile.personaName}
-                        </h1>
-                        <p className="text-white/60 text-sm break-all">
-                            SteamID: {profile.steamId64}
-                        </p>
+                {/* Info Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 w-full min-w-0 relative z-10">
+                    {/* Left: Name & Actions */}
+                    <div className="flex flex-col gap-3">
+                        <div>
+                            <h1 className="text-5xl font-bold truncate bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+                                {profile.personaName}
+                            </h1>
+                            <p className="text-white/40 text-sm font-mono mt-1 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500/50" />
+                                SteamID: {profile.steamId64}
+                            </p>
+                        </div>
+
                         <div className="flex flex-wrap gap-3 mt-2">
                             {profile.steamId64 && (
                                 <a
                                     href={`https://steamcommunity.com/profiles/${profile.steamId64}`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-sm"
+                                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600/80 to-cyan-600/80 hover:from-purple-500 hover:to-cyan-500  text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] flex items-center gap-2 group/btn"
                                 >
-                                    View Steam Profile →
+                                    View Steam Profile
+                                    <svg
+                                        className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                        />
+                                    </svg>
                                 </a>
                             )}
+
+                            <a
+                                href="/explore"
+                                className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium transition-all duration-300 hover:border-purple-500/30 flex items-center gap-2 cursor-pointer"
+                            >
+                                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                                View Universe Map
+                            </a>
                         </div>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
                         <InfoRow
                             label="Profile Visibility"
                             value={visibilityLabel(profile.visibility)}
+                            icon="🔒"
                         />
-
+                        <InfoRow
+                            label="Profile State"
+                            value={
+                                profile.personaState ? 'Configured' : 'Unknown'
+                            }
+                            icon="⚙️"
+                        />
                         <InfoRow
                             label="Last Online"
-                            value={formatUnix(profile.lastLogOff)}
+                            value={formatUnix(profile.lastlogoff)}
+                            icon="🕐"
                         />
                         <InfoRow
                             label="Account Created"
-                            value={`${formatDate(profile.timeCreated)}`}
+                            value={formatDate(profile.timeCreated)}
+                            icon="📅"
                         />
-
                         <InfoRow
                             label="Location"
-                            value={profile.locCountryCode}
+                            value={profile.locstatecode || 'Unknown'}
+                            icon="📍"
+                        />
+                        <InfoRow
+                            label="Games Owned"
+                            value={games.length.toString()}
+                            icon="🎮"
                         />
                     </div>
                 </div>
@@ -183,13 +239,24 @@ export default function ProfilePage() {
     );
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoRow({
+    label,
+    value,
+    icon,
+}: {
+    label: string;
+    value: string;
+    icon?: string;
+}) {
     return (
-        <div className="flex flex-col gap-1 p-4 rounded-xl bg-black/20 border border-white/10">
-            <p className="text-xs uppercase tracking-wide text-white/50">
-                {label}
-            </p>
-            <p className="text-white/90 break-words text-xl text-center mt-[10px]">
+        <div className="group flex flex-col gap-1 p-4 rounded-xl bg-black/30 border border-white/5 hover:border-purple-500/30 hover:bg-purple-900/10 transition-all duration-300">
+            <div className="flex items-center gap-2 text-white/40 group-hover:text-purple-300 transition-colors">
+                <span className="text-xs">{icon}</span>
+                <p className="text-xs uppercase tracking-wider font-medium">
+                    {label}
+                </p>
+            </div>
+            <p className="text-white/90 font-medium text-lg mt-1 group-hover:text-white transition-colors">
                 {value}
             </p>
         </div>
@@ -218,8 +285,10 @@ function PlaytimeChart({
     const barColors = ['#8B5CF6', '#7C3AED', '#06B6D4', '#3B82F6', '#6366F1'];
 
     return (
-        <div className="h-[260px] rounded-xl bg-black/20 border border-white/10 p-4 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 pointer-events-none rounded-xl" />
+        <div className="h-[260px] rounded-xl bg-black/70 border border-white/10 p-4 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-cyan-600/30 to-purple-600/30 blur-xl opacity-50 animate-pulse z-0" />
+            {/* Content layer - z-10 puts it above the glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 pointer-events-none rounded-xl z-10" />
 
             <p className="text-sm text-white/70 mb-3 font-medium tracking-wide">
                 Most played (hours)
@@ -313,7 +382,7 @@ function PlaytimeSection({
 }: {
     games: { appid: number; name: string; playtime_forever: number }[];
 }) {
-  const { totalHours, top5 } = buildPlaytimeStats(games);
+    const { totalHours, top5 } = buildPlaytimeStats(games);
 
     return (
         <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">
@@ -333,9 +402,7 @@ function PlaytimeSection({
                 </div>
             </div>
 
-            {/* TWO COLUMNS: Top 5 on left, Chart on right */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* LEFT: Top 5 Games List */}
                 <div className="rounded-xl bg-black/20 border border-white/10 p-4 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-cyan-500 to-blue-500" />
 
@@ -398,7 +465,6 @@ function PlaytimeSection({
                     </div>
                 </div>
 
-                {/* RIGHT: Chart */}
                 <PlaytimeChart top5={top5} />
             </div>
         </div>
