@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSteamId64 } from "@/lib/getSteamId64";
+import { getPlayerAchievements } from "@/lib/steam/getPlayerAchievements";
 
 const steamApiKey = process.env.STEAM_API_KEY!;
-const apiEndpoint = "http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001";
 
 export async function GET(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
@@ -23,25 +23,10 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const params = new URLSearchParams({
-    key: steamApiKey,
-    steamid: steamId64,
-    appid: appId,
-  });
-
   try {
-    const res = await fetch(`${apiEndpoint}?${params.toString()}`);
-
-    if (!res.ok) {
-      return NextResponse.json({ error: "Steam API Error" }, { status: 502 });
-    }
-
-    const data = await res.json();
-    return NextResponse.json(data, { status: 200 });
+    const playerAchievements = await getPlayerAchievements(steamId64, appId, steamApiKey);
+    return NextResponse.json(playerAchievements, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: `Internal Server Error: ${pathname}` },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: `Internal Server Error: ${pathname}` }, { status: 500 });
   }
 }
