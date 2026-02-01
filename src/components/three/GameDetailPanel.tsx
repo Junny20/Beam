@@ -3,11 +3,12 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import type { GameGraphNode } from "@/lib/graph/types";
-import {
-  calculateNodeProperties,
-  getFriendsWhoOwnGame,
-  getFriendsWhoPlayedRecently,
-} from "@/data/mockGames";
+import { calculateNodeProperties } from "@/lib/graph/calculateNodeProperties";
+// import {
+//   calculateNodeProperties,
+//   getFriendsWhoOwnGame,
+//   getFriendsWhoPlayedRecently,
+// } from "@/data/mockGames";
 import {
   Trophy,
   Clock,
@@ -19,6 +20,7 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
+import { formatDate } from "@/lib/graph/formatDate";
 
 interface GameDetailPanelProps {
   game: GameGraphNode | null;
@@ -34,8 +36,8 @@ export default function GameDetailPanel({
     ? calculateNodeProperties(game)
     : { size: 0, glowIntensity: 0 };
 
-  const friendsWhoOwn = game ? getFriendsWhoOwnGame(game.id) : [];
-  const friendsWhoPlayed = game ? getFriendsWhoPlayedRecently(game.id) : [];
+  // const friendsWhoOwn = game ? getFriendsWhoOwnGame(game.id) : [];
+  // const friendsWhoPlayed = game ? getFriendsWhoPlayedRecently(game.id) : [];
 
   useEffect(() => {
     if (game && panelRef.current) {
@@ -130,7 +132,7 @@ export default function GameDetailPanel({
             <div className="bg-purple-primary/20 rounded-xl p-4 text-center">
               <Clock className="w-6 h-6 text-purple-secondary mx-auto mb-2" />
               <p className="text-2xl font-display font-bold text-white">
-                {game.playtime}
+                {game.playtime.toFixed(1)}
               </p>
               <p className="text-xs text-gray-400">Total Hours</p>
             </div>
@@ -192,7 +194,7 @@ export default function GameDetailPanel({
                   Last Played
                 </span>
               </div>
-              <p className="text-white font-display">{game.lastPlayed}</p>
+              <p className="text-white font-display">{formatDate(game.lastPlayed)}</p>
             </div>
 
             <div className="bg-purple-dark/40 rounded-xl p-4">
@@ -260,8 +262,7 @@ export default function GameDetailPanel({
             </div>
           </div>
 
-          {/* Friends Section */}
-          {(friendsWhoOwn.length > 0 || friendsWhoPlayed.length > 0) && (
+          {/* {(friendsWhoOwn.length > 0 || friendsWhoPlayed.length > 0) && (
             <div className="border-t border-purple-secondary/20 pt-5">
               <div className="flex items-center gap-2 mb-4">
                 <Users className="w-5 h-5 text-purple-secondary" />
@@ -319,7 +320,7 @@ export default function GameDetailPanel({
                 </div>
               )}
             </div>
-          )}
+          )} */}
 
           {/* Actions */}
           <div className="flex gap-3 pt-2">
