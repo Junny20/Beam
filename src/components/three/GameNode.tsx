@@ -94,7 +94,7 @@ export default function GameNode({
         if (meshRef.current) {
             // Gentle floating animation
             meshRef.current.position.y =
-                position.y + Math.sin(time * 0.3 + index * 0.5) * 0.15;
+                Math.sin(time * 0.3 + index * 0.5) * 0.15;
 
             // Slow rotation
             meshRef.current.rotation.x = Math.sin(time * 0.1 + index) * 0.1;
@@ -137,7 +137,7 @@ export default function GameNode({
                     map={glowTexture}
                     color={game.color}
                     transparent
-                    opacity={0.15 + glowIntensity * 0.25}
+                    opacity={0.4 + glowIntensity * 0.4}
                     depthWrite={false}
                     blending={THREE.AdditiveBlending}
                     side={THREE.DoubleSide}
@@ -172,25 +172,37 @@ export default function GameNode({
                 onClick={onClick}
                 onPointerOver={() => onHover(true)}
                 onPointerOut={() => onHover(false)}
+                receiveShadow
             >
                 <meshStandardMaterial
                     color={game.color}
-                    metalness={0.6}
-                    roughness={0.3}
+                    metalness={0.7}
+                    roughness={0.2}
+                    envMapIntensity={1}
                     emissive={game.color}
-                    emissiveIntensity={0.2 + glowIntensity * 0.4}
+                    emissiveIntensity={0.4 + glowIntensity * 0.2}
+                    transparent={true}
+                    opacity={0.85}
                 />
             </mesh>
 
-            <mesh position={[0, 0, 0.05]}>
-                <icosahedronGeometry args={[size * 0.5, 0]} />
+            {/* Inner core glow */}
+            <mesh position={[0, 0, 0]}>
+                <icosahedronGeometry args={[size * 0.25, 0]} />
                 <meshBasicMaterial
                     color="#ffffff"
                     transparent
-                    opacity={0.3}
+                    opacity={0.8}
                     blending={THREE.AdditiveBlending}
+                    depthWrite={false}
                 />
             </mesh>
+            <pointLight
+                intensity={0.5}
+                distance={size * 3}
+                color={game.color}
+                position={[0, 0, 0]}
+            />
 
             {/* Wireframe overlay */}
             <mesh geometry={geometry}>
