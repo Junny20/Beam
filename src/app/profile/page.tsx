@@ -58,8 +58,6 @@ export default function ProfilePage() {
   const [games, setGames] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {console.log(games)}, [games]);
-
   useEffect(() => {
     const loadProfileAndGames = async () => {
       try {
@@ -106,8 +104,6 @@ export default function ProfilePage() {
   if (!profile) {
     return <div>No profile</div>;
   }
-
-  console.log(profile);
 
   const status = personaStateLabel(profile.personaState);
 
@@ -218,10 +214,7 @@ function PlaytimeSection({
 }: {
   games: { appid: number; name: string; playtime_forever: number }[];
 }) {
-    console.log("this runs.");
   const { totalHours, top5 } = buildPlaytimeStats(games);
-  console.log(totalHours);
-  console.log(top5);
 
   return (
     <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">

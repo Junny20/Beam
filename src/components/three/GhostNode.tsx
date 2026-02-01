@@ -58,7 +58,6 @@ export default function GhostNode({
 
     return (
         <group position={position}>
-            {/* Muted glow */}
             <mesh ref={glowRef} position={[0, 0, -0.2]}>
                 <planeGeometry args={[size * 3, size * 3]} />
                 <meshBasicMaterial

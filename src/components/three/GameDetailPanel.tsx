@@ -1,3 +1,5 @@
+// SHOWS PERSONAL INFO WHEN I CLICK ON A GAME NODE
+
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import type { Game } from '@/data/mockGames';

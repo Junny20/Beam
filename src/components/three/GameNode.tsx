@@ -15,9 +15,7 @@ interface GameNodeProps {
     index: number;
 }
 
-// Create a polyhedron geometry for the node
 function createPolyhedronGeometry(size: number) {
-    // Icosahedron for a cool geometric look
     const geometry = new THREE.IcosahedronGeometry(size, 0);
     return geometry;
 }
@@ -160,7 +158,6 @@ export default function GameNode({
                 </mesh>
             )}
 
-            {/* Particle ring for high activity */}
             {particleCount > 0 && (
                 <points
                     ref={particlesRef}
@@ -169,7 +166,6 @@ export default function GameNode({
                 />
             )}
 
-            {/* Main polyhedron node */}
             <mesh
                 ref={meshRef}
                 geometry={geometry}
@@ -186,7 +182,6 @@ export default function GameNode({
                 />
             </mesh>
 
-            {/* Inner core glow */}
             <mesh position={[0, 0, 0.05]}>
                 <icosahedronGeometry args={[size * 0.5, 0]} />
                 <meshBasicMaterial
