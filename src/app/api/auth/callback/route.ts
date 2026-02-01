@@ -5,106 +5,113 @@ import { syncProfile } from "@/lib/sync/profile";
 import { syncOwnedGames } from "@/lib/sync/ownedGames";
 import { syncFriends } from "@/lib/sync/friends";
 
-const baseUrl = process.env.BASE_URL!;
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ??
+  "https://beam-eta-rust.vercel.app";
 const cookieExpiresIn = process.env.COOKIE_EXPIRES_IN!;
 const steamVerifyUrl = "https://steamcommunity.com/openid/login";
 
 export async function GET(req: Request) {
-    const { searchParams } = new URL(req.url); 
+  try {
+    const { searchParams } = new URL(req.url);
 
-    // if user clicks cancel when prompted to login through steam there is 
+    // if user clicks cancel when prompted to login through steam there is
     // nothing to process
     if (searchParams.get("openid.mode") === "cancel") {
-        return NextResponse.redirect(new URL("/login?cancel=1", baseUrl));
+      return NextResponse.redirect(new URL("/login?cancel=1", baseUrl));
     }
-    
+
     const openidParams: Record<string, string> = {};
     for (const [key, value] of searchParams.entries()) {
-        if (key.startsWith("openid.")) {
-            openidParams[key] = value;
-        }
+      if (key.startsWith("openid.")) {
+        openidParams[key] = value;
+      }
     }
 
     const verifyParams = new URLSearchParams();
 
     for (const [key, value] of Object.entries(openidParams)) {
-        verifyParams.set(key, value);
+      verifyParams.set(key, value);
     }
 
     verifyParams.set("openid.mode", "check_authentication");
 
     const res = await fetch(steamVerifyUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: verifyParams.toString(),
-    })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: verifyParams.toString(),
+    });
 
     if (!res.ok) {
-        return NextResponse.json(
-            { error: "Steam OpenID verification unavailable" },
-            { status: 502 } // bad gateway
-        );
+      return NextResponse.json(
+        { error: "Steam OpenID verification unavailable" },
+        { status: 502 }, // bad gateway
+      );
     }
 
     const text = await res.text();
-    
+
     const isValid = text
-        .split("\n")
-        .some(line => line.trim() === "is_valid:true");
+      .split("\n")
+      .some((line) => line.trim() === "is_valid:true");
 
     if (!isValid) {
-        return NextResponse.json(
-            { error: "Steam OpenID verification failed" },
-            { status: 401 }
-        );
+      return NextResponse.json(
+        { error: "Steam OpenID verification failed" },
+        { status: 401 },
+      );
     } else {
-        const identity = openidParams["openid.identity"];
-        
-        if (!identity) {
-            return NextResponse.json(
-                { error: "Missing OpenID identity" },
-                { status: 400 }
-            );
-        }
+      const identity = openidParams["openid.identity"];
 
-        const steamId64 = identity.split("/").pop();
+      if (!identity) {
+        return NextResponse.json(
+          { error: "Missing OpenID identity" },
+          { status: 400 },
+        );
+      }
 
-        if (!steamId64) {
-            return NextResponse.json(
-                { error: "Invalid SteamID format" },
-                { status: 400 }
-            );
-        }
+      const steamId64 = identity.split("/").pop();
 
-        const user = await prisma.user.upsert({
-            where: { steamId64 },
-            update: {},
-            create: { steamId64 },
-        });
-        
-        const payload: AuthPayload = {
-            userId: user.id,
-            steamId64,
-        }
+      if (!steamId64) {
+        return NextResponse.json(
+          { error: "Invalid SteamID format" },
+          { status: 400 },
+        );
+      }
 
-        const token = signAuthJwt(payload);
+      const user = await prisma.user.upsert({
+        where: { steamId64 },
+        update: {},
+        create: { steamId64 },
+      });
 
-        const res = NextResponse.redirect(new URL("/explore", baseUrl));
+      const payload: AuthPayload = {
+        userId: user.id,
+        steamId64,
+      };
 
-        res.cookies.set("auth", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: Number(cookieExpiresIn),                
-        });
+      const token = signAuthJwt(payload);
 
-        void syncProfile(steamId64).catch(console.error);
-        void syncOwnedGames(user.id, steamId64).catch(console.error);
-        void syncFriends(steamId64).catch(console.error);
+      const res = NextResponse.redirect(new URL("/explore", baseUrl));
 
-        return res;
+      res.cookies.set("auth", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: Number(cookieExpiresIn),
+      });
+
+      void syncProfile(steamId64).catch(console.error);
+      void syncOwnedGames(user.id, steamId64).catch(console.error);
+      void syncFriends(steamId64).catch(console.error);
+
+      return res;
     }
+  } catch (err) {
+    console.error("AUTH CALLBACK ERROR:", err);
+    return NextResponse.json({ error: "Auth failed" }, { status: 500 });
+  }
 }
