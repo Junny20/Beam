@@ -524,6 +524,9 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   visibility: 'visibility',
   personaState: 'personaState',
+  lastLogOff: 'lastLogOff',
+  timeCreated: 'timeCreated',
+  locCountryCode: 'locCountryCode',
   lastSyncAt: 'lastSyncAt',
   createdAt: 'createdAt'
 } as const

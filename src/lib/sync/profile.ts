@@ -18,6 +18,9 @@ export async function syncProfile(steamId64: string) {
       avatar: player.avatarfull,
       visibility: player.communityvisibilitystate,
       personaState: player.personastate,
+      lastLogOff: player.lastlogoff,
+      timeCreated: player.timecreated,
+      locCountryCode: player.loccountrycode,
       lastSyncAt: new Date(),
     },
   });

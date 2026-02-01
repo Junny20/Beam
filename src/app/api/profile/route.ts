@@ -1,6 +1,6 @@
-import { getSteamId64 } from "@/lib/getSteamId64";
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { getSteamId64 } from "@/lib/getSteamId64";
 
 export async function GET(req: NextRequest) {
   let steamId64: string;
@@ -29,8 +29,9 @@ export async function GET(req: NextRequest) {
   });
 
   if (!user) {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+    return NextResponse.json({ error: "No user found" }, { status: 400 });
   }
 
-  return NextResponse.json({ authenticated: true, user }, { status: 200 });
+  // console.log(user);
+  return NextResponse.json({ user }, { status: 200 });
 }
