@@ -16,6 +16,9 @@ model User {
   avatar      String?
   visibility  Int?      
   personaState Int?     // online/offline... 
+  lastLogOff Int?
+  timeCreated Int?
+  locCountryCode String?
 
   lastSyncAt DateTime?
 

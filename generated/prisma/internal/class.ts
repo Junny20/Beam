@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider   = \"prisma-client\"\n  output     = \"../generated/prisma\"\n  engineType = \"client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String @id @default(cuid())\n  steamId64 String @unique\n\n  personaName  String?\n  avatar       String?\n  visibility   Int?\n  personaState Int? // online/offline... \n\n  lastSyncAt DateTime?\n\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchema": "generator client {\n  provider   = \"prisma-client\"\n  output     = \"../generated/prisma\"\n  engineType = \"client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String @id @default(cuid())\n  steamId64 String @unique\n\n  personaName    String?\n  avatar         String?\n  visibility     Int?\n  personaState   Int? // online/offline... \n  lastLogOff     Int?\n  timeCreated    Int?\n  locCountryCode String?\n\n  lastSyncAt DateTime?\n\n  createdAt DateTime @default(now())\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"steamId64\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"personaName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visibility\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"personaState\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastSyncAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"steamId64\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"personaName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"avatar\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visibility\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"personaState\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastLogOff\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"timeCreated\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"locCountryCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastSyncAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')

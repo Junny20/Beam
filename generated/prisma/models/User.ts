@@ -29,11 +29,15 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   visibility: number | null
   personaState: number | null
+  lastLogOff: number | null
+  timeCreated: number | null
 }
 
 export type UserSumAggregateOutputType = {
   visibility: number | null
   personaState: number | null
+  lastLogOff: number | null
+  timeCreated: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -43,6 +47,9 @@ export type UserMinAggregateOutputType = {
   avatar: string | null
   visibility: number | null
   personaState: number | null
+  lastLogOff: number | null
+  timeCreated: number | null
+  locCountryCode: string | null
   lastSyncAt: Date | null
   createdAt: Date | null
 }
@@ -54,6 +61,9 @@ export type UserMaxAggregateOutputType = {
   avatar: string | null
   visibility: number | null
   personaState: number | null
+  lastLogOff: number | null
+  timeCreated: number | null
+  locCountryCode: string | null
   lastSyncAt: Date | null
   createdAt: Date | null
 }
@@ -65,6 +75,9 @@ export type UserCountAggregateOutputType = {
   avatar: number
   visibility: number
   personaState: number
+  lastLogOff: number
+  timeCreated: number
+  locCountryCode: number
   lastSyncAt: number
   createdAt: number
   _all: number
@@ -74,11 +87,15 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   visibility?: true
   personaState?: true
+  lastLogOff?: true
+  timeCreated?: true
 }
 
 export type UserSumAggregateInputType = {
   visibility?: true
   personaState?: true
+  lastLogOff?: true
+  timeCreated?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -88,6 +105,9 @@ export type UserMinAggregateInputType = {
   avatar?: true
   visibility?: true
   personaState?: true
+  lastLogOff?: true
+  timeCreated?: true
+  locCountryCode?: true
   lastSyncAt?: true
   createdAt?: true
 }
@@ -99,6 +119,9 @@ export type UserMaxAggregateInputType = {
   avatar?: true
   visibility?: true
   personaState?: true
+  lastLogOff?: true
+  timeCreated?: true
+  locCountryCode?: true
   lastSyncAt?: true
   createdAt?: true
 }
@@ -110,6 +133,9 @@ export type UserCountAggregateInputType = {
   avatar?: true
   visibility?: true
   personaState?: true
+  lastLogOff?: true
+  timeCreated?: true
+  locCountryCode?: true
   lastSyncAt?: true
   createdAt?: true
   _all?: true
@@ -208,6 +234,9 @@ export type UserGroupByOutputType = {
   avatar: string | null
   visibility: number | null
   personaState: number | null
+  lastLogOff: number | null
+  timeCreated: number | null
+  locCountryCode: string | null
   lastSyncAt: Date | null
   createdAt: Date
   _count: UserCountAggregateOutputType | null
@@ -242,6 +271,9 @@ export type UserWhereInput = {
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   visibility?: Prisma.IntNullableFilter<"User"> | number | null
   personaState?: Prisma.IntNullableFilter<"User"> | number | null
+  lastLogOff?: Prisma.IntNullableFilter<"User"> | number | null
+  timeCreated?: Prisma.IntNullableFilter<"User"> | number | null
+  locCountryCode?: Prisma.StringNullableFilter<"User"> | string | null
   lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -253,6 +285,9 @@ export type UserOrderByWithRelationInput = {
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrderInput | Prisma.SortOrder
   personaState?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrderInput | Prisma.SortOrder
+  timeCreated?: Prisma.SortOrderInput | Prisma.SortOrder
+  locCountryCode?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -267,6 +302,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
   visibility?: Prisma.IntNullableFilter<"User"> | number | null
   personaState?: Prisma.IntNullableFilter<"User"> | number | null
+  lastLogOff?: Prisma.IntNullableFilter<"User"> | number | null
+  timeCreated?: Prisma.IntNullableFilter<"User"> | number | null
+  locCountryCode?: Prisma.StringNullableFilter<"User"> | string | null
   lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }, "id" | "steamId64">
@@ -278,6 +316,9 @@ export type UserOrderByWithAggregationInput = {
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   visibility?: Prisma.SortOrderInput | Prisma.SortOrder
   personaState?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrderInput | Prisma.SortOrder
+  timeCreated?: Prisma.SortOrderInput | Prisma.SortOrder
+  locCountryCode?: Prisma.SortOrderInput | Prisma.SortOrder
   lastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -297,6 +338,9 @@ export type UserScalarWhereWithAggregatesInput = {
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   visibility?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   personaState?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  lastLogOff?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  timeCreated?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  locCountryCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   lastSyncAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -308,6 +352,9 @@ export type UserCreateInput = {
   avatar?: string | null
   visibility?: number | null
   personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -319,6 +366,9 @@ export type UserUncheckedCreateInput = {
   avatar?: string | null
   visibility?: number | null
   personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -330,6 +380,9 @@ export type UserUpdateInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,6 +394,9 @@ export type UserUncheckedUpdateInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,6 +408,9 @@ export type UserCreateManyInput = {
   avatar?: string | null
   visibility?: number | null
   personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
 }
@@ -363,6 +422,9 @@ export type UserUpdateManyMutationInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -374,6 +436,9 @@ export type UserUncheckedUpdateManyInput = {
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -385,6 +450,9 @@ export type UserCountOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   personaState?: Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrder
+  timeCreated?: Prisma.SortOrder
+  locCountryCode?: Prisma.SortOrder
   lastSyncAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -392,6 +460,8 @@ export type UserCountOrderByAggregateInput = {
 export type UserAvgOrderByAggregateInput = {
   visibility?: Prisma.SortOrder
   personaState?: Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrder
+  timeCreated?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -401,6 +471,9 @@ export type UserMaxOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   personaState?: Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrder
+  timeCreated?: Prisma.SortOrder
+  locCountryCode?: Prisma.SortOrder
   lastSyncAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -412,6 +485,9 @@ export type UserMinOrderByAggregateInput = {
   avatar?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
   personaState?: Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrder
+  timeCreated?: Prisma.SortOrder
+  locCountryCode?: Prisma.SortOrder
   lastSyncAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -419,6 +495,8 @@ export type UserMinOrderByAggregateInput = {
 export type UserSumOrderByAggregateInput = {
   visibility?: Prisma.SortOrder
   personaState?: Prisma.SortOrder
+  lastLogOff?: Prisma.SortOrder
+  timeCreated?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -454,6 +532,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   avatar?: boolean
   visibility?: boolean
   personaState?: boolean
+  lastLogOff?: boolean
+  timeCreated?: boolean
+  locCountryCode?: boolean
   lastSyncAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -465,6 +546,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatar?: boolean
   visibility?: boolean
   personaState?: boolean
+  lastLogOff?: boolean
+  timeCreated?: boolean
+  locCountryCode?: boolean
   lastSyncAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -476,6 +560,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   avatar?: boolean
   visibility?: boolean
   personaState?: boolean
+  lastLogOff?: boolean
+  timeCreated?: boolean
+  locCountryCode?: boolean
   lastSyncAt?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -487,11 +574,14 @@ export type UserSelectScalar = {
   avatar?: boolean
   visibility?: boolean
   personaState?: boolean
+  lastLogOff?: boolean
+  timeCreated?: boolean
+  locCountryCode?: boolean
   lastSyncAt?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamId64" | "personaName" | "avatar" | "visibility" | "personaState" | "lastSyncAt" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamId64" | "personaName" | "avatar" | "visibility" | "personaState" | "lastLogOff" | "timeCreated" | "locCountryCode" | "lastSyncAt" | "createdAt", ExtArgs["result"]["user"]>
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
@@ -503,6 +593,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     avatar: string | null
     visibility: number | null
     personaState: number | null
+    lastLogOff: number | null
+    timeCreated: number | null
+    locCountryCode: string | null
     lastSyncAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["user"]>
@@ -934,6 +1027,9 @@ export interface UserFieldRefs {
   readonly avatar: Prisma.FieldRef<"User", 'String'>
   readonly visibility: Prisma.FieldRef<"User", 'Int'>
   readonly personaState: Prisma.FieldRef<"User", 'Int'>
+  readonly lastLogOff: Prisma.FieldRef<"User", 'Int'>
+  readonly timeCreated: Prisma.FieldRef<"User", 'Int'>
+  readonly locCountryCode: Prisma.FieldRef<"User", 'String'>
   readonly lastSyncAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
