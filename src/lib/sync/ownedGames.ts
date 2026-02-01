@@ -4,6 +4,15 @@ import { prisma } from "../prisma";
 const steamApiKey = process.env.STEAM_API_KEY!;
 
 export async function syncOwnedGames(userId: string, steamId64: string) {
+  const user = await prisma.user.findUnique({
+    where: { steamId64 },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+  
   const games = await getOwnedGames(steamId64, steamApiKey);
   if (!games) throw new Error("syncOwnedGames failed");
 

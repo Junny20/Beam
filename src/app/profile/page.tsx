@@ -1,472 +1,348 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { buildPlaytimeStats } from '@/data/mockUsers';
+"use client";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { buildPlaytimeStats } from "@/data/mockUsers";
+import { FriendsModal } from "./FriendsModal";
 import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    CartesianGrid,
-    Cell,
-} from 'recharts';
-import Backlogs from './Backlogs';
-
-function formatUnix(ts?: number) {
-    if (!ts) return 'Unknown';
-    const d = new Date(ts * 1000);
-    return d.toLocaleString();
-}
-
-function formatDate(ts?: number) {
-    if (!ts) return 'Unknown';
-    const d = new Date(ts * 1000);
-    return d.toLocaleDateString();
-}
-
-function personaStateLabel(state?: number) {
-    switch (state) {
-        case 0:
-            return { label: 'Offline', dot: 'bg-gray-500' };
-        case 1:
-            return { label: 'Online', dot: 'bg-green-500' };
-        case 2:
-            return { label: 'Busy', dot: 'bg-red-500' };
-        case 3:
-            return { label: 'Away', dot: 'bg-yellow-500' };
-        case 4:
-            return { label: 'Snooze', dot: 'bg-yellow-400' };
-        case 5:
-            return { label: 'Looking to Trade', dot: 'bg-blue-500' };
-        case 6:
-            return { label: 'Looking to Play', dot: 'bg-purple-500' };
-        default:
-            return { label: 'Unknown', dot: 'bg-gray-500' };
-    }
-}
-
-function visibilityLabel(v?: number) {
-    // 1 = private, 3 = public (common values)
-    if (v === 3) return 'Public';
-    if (v === 1) return 'Private';
-    return 'Unknown';
-}
+  formatUnix,
+  formatDate,
+  personaStateLabel,
+  visibilityLabel,
+} from "./utils";
+import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Cell } from "recharts";
 
 export default function ProfilePage() {
-    const [profile, setProfile] = useState<any>(null);
-    const [games, setGames] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+  const [friendsOpen, setFriendsOpen] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
+  const [games, setGames] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const loadProfileAndGames = async () => {
-            try {
-                // Load profile
-                let res = await fetch('/api/profile');
+  useEffect(() => {
+    const loadProfileAndGames = async () => {
+      try {
+        // Load profile
+        let res = await fetch("/api/profile");
 
-                if (res.status === 401) {
-                    window.location.href = '/login';
-                    return;
-                }
+        if (res.status === 401) {
+          window.location.href = "/login";
+          return;
+        }
 
-                let data = await res.json();
+        let data = await res.json();
 
-                if (!data.user?.personaName) {
-                    await fetch('/api/steam/sync/profile', { method: 'POST' });
-                    res = await fetch('/api/profile');
-                    data = await res.json();
-                }
+        if (!data.user?.personaName) {
+          await fetch("/api/steam/sync/profile", { method: "POST" });
+          res = await fetch("/api/profile");
+          data = await res.json();
+        }
 
-                setProfile(data.user);
+        setProfile(data.user);
 
-                // Load owned games
-                const gamesRes = await fetch('/api/steam/owned_games');
-                if (!gamesRes.ok) {
-                    throw new Error('Failed to load owned games');
-                }
+        // Load owned games
+        const gamesRes = await fetch("/api/steam/owned_games");
+        if (!gamesRes.ok) {
+          throw new Error("Failed to load owned games");
+        }
 
-                const games = await gamesRes.json();
-                setGames(games ?? []);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+        const games = await gamesRes.json();
+        setGames(games ?? []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        loadProfileAndGames();
-    }, []);
+    loadProfileAndGames();
+  }, []);
 
-    if (loading) {
-        return <div>Loading</div>;
-    }
-
-    if (!profile) {
-        return <div>No profile</div>;
-    }
-
-    const status = personaStateLabel(profile.personaState);
-
+  if (loading) {
     return (
-        <div className="p-6">
-            {/* Profile Header - Universe Theme */}
-            <div className="relative flex flex-col md:flex-row gap-8 p-8 rounded-2xl bg-black/40 border border-purple-500/20 backdrop-blur-md mt-[60px] overflow-hidden group">
-                {/* Animated gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Top gradient line */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-cyan-500 to-purple-500" />
-
-                {/* Glow effects */}
-                <div className="absolute -top-20 -left-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
-
-                {/* Avatar Section */}
-                <div className="shrink-0 relative z-10">
-                    <div className="relative">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-[32px] blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
-                        <div className="relative w-[200px] h-[200px] rounded-[30px] overflow-hidden border-2 border-white/10 bg-gray-900">
-                            <Image
-                                src={profile.avatar}
-                                alt="User Avatar"
-                                fill
-                                className="object-cover"
-                                sizes="200px"
-                                priority
-                            />
-                        </div>
-                    </div>
-
-                    {/* Status Badge */}
-                    <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/50 border border-white/10 backdrop-blur-sm">
-                        <span
-                            className={`w-2.5 h-2.5 rounded-full ${status.dot} animate-pulse shadow-[0_0_8px_currentColor]`}
-                        />
-                        <span className="text-sm font-medium text-white/90">
-                            {status.label}
-                        </span>
-                    </div>
-                </div>
-
-                {/* Info Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 w-full min-w-0 relative z-10">
-                    {/* Left: Name & Actions */}
-                    <div className="flex flex-col gap-3">
-                        <div>
-                            <h1 className="text-5xl font-bold truncate bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-                                {profile.personaName}
-                            </h1>
-                            <p className="text-white/40 text-sm font-mono mt-1 flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-purple-500/50" />
-                                SteamID: {profile.steamId64}
-                            </p>
-                        </div>
-
-                        <div className="flex flex-wrap gap-3 mt-2">
-                            {profile.steamId64 && (
-                                <a
-                                    href={`https://steamcommunity.com/profiles/${profile.steamId64}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-600/80 to-cyan-600/80 hover:from-purple-500 hover:to-cyan-500  text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] flex items-center gap-2 group/btn"
-                                >
-                                    View Steam Profile
-                                    <svg
-                                        className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                        />
-                                    </svg>
-                                </a>
-                            )}
-
-                            <a
-                                href="/explore"
-                                className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-medium transition-all duration-300 hover:border-purple-500/30 flex items-center gap-2 cursor-pointer"
-                            >
-                                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                                View Universe Map
-                            </a>
-                        </div>
-                    </div>
-
-                    <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <InfoRow
-                            label="Profile Visibility"
-                            value={visibilityLabel(profile.visibility)}
-                            icon="🔒"
-                        />
-                        <InfoRow
-                            label="Profile State"
-                            value={
-                                profile.personaState ? 'Configured' : 'Unknown'
-                            }
-                            icon="⚙️"
-                        />
-                        <InfoRow
-                            label="Last Online"
-                            value={formatUnix(profile.lastlogoff)}
-                            icon="🕐"
-                        />
-                        <InfoRow
-                            label="Account Created"
-                            value={formatDate(profile.timeCreated)}
-                            icon="📅"
-                        />
-                        <InfoRow
-                            label="Location"
-                            value={profile.locstatecode || 'Unknown'}
-                            icon="📍"
-                        />
-                        <InfoRow
-                            label="Games Owned"
-                            value={games.length.toString()}
-                            icon="🎮"
-                        />
-                    </div>
-                </div>
-            </div>
-            <PlaytimeSection games={games} />
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+        <div className="w-8 h-8 border-2 border-slate-700 border-t-indigo-500 rounded-full animate-spin" />
+      </div>
     );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-400">
+        No profile data available
+      </div>
+    );
+  }
+
+  const status = personaStateLabel(profile.personaState);
+
+  return (
+    <div className="min-h-screen bg-slate-950 pb-20">
+      <div className="max-w-6xl mx-auto px-6 pt-24">
+        {/* Profile Header */}
+        <div className="relative overflow-hidden rounded-2xl bg-slate-900/40 border border-slate-800/60 backdrop-blur-xl">
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-sky-500/5" />
+          
+          <div className="relative p-8 md:p-10">
+            <div className="flex flex-col md:flex-row gap-8">
+              {/* Avatar Section */}
+              <div className="shrink-0">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-b from-slate-700 to-slate-800 rounded-2xl -inset-px blur opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative w-40 h-40 rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-800 shadow-2xl">
+                    <Image
+                      src={profile.avatar}
+                      alt="User Avatar"
+                      fill
+                      className="object-cover"
+                      sizes="160px"
+                      priority
+                    />
+                  </div>
+                </div>
+
+                {/* Status Badge */}
+                <div className="mt-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/50 border border-slate-700/50 w-fit">
+                  <span className={`w-2 h-2 rounded-full ${status.dot} ring-2 ring-slate-900`} />
+                  <span className="text-sm font-medium text-slate-300">
+                    {status.label}
+                  </span>
+                </div>
+              </div>
+
+              {/* Info Section */}
+              <div className="flex-1 min-w-0 space-y-6">
+                {/* Header */}
+                <div className="space-y-2">
+                  <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white">
+                    {profile.personaName}
+                  </h1>
+                  <div className="flex items-center gap-2 text-slate-500 font-mono text-sm">
+                    <span>ID:</span>
+                    <span className="text-slate-400">{profile.steamId64}</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-3">
+                  {profile.steamId64 && (
+                    <a
+                      href={`https://steamcommunity.com/profiles/${profile.steamId64}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-slate-950 font-medium text-sm hover:bg-slate-200 transition-colors shadow-lg shadow-white/5"
+                    >
+                      View Steam Profile
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  )}
+                  
+                  <button
+                    onClick={() => setFriendsOpen(true)}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-slate-800 text-slate-200 font-medium text-sm hover:bg-slate-700 transition-colors border border-slate-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                    View Friends
+                  </button>
+
+                  <a
+                    href="/explore"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-slate-800/50 text-slate-300 font-medium text-sm hover:bg-slate-800 transition-colors border border-slate-800"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+                    </svg>
+                    Universe Map
+                  </a>
+                </div>
+
+                {/* Info Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800/50">
+                  <InfoItem label="Visibility" value={visibilityLabel(profile.visibility)} />
+                  <InfoItem label="Last Online" value={formatUnix(profile.lastlogoff)} />
+                  <InfoItem label="Member Since" value={formatDate(profile.timeCreated)} />
+                  <InfoItem label="Location" value={profile.locstatecode || "Unknown"} />
+                  <InfoItem label="Games Owned" value={games.length.toString()} />
+                  <InfoItem label="Profile State" value={profile.personaState ? "Configured" : "Unknown"} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Playtime Section */}
+        <PlaytimeSection games={games} />
+      </div>
+
+      {friendsOpen && (
+        <FriendsModal onClose={() => setFriendsOpen(false)} />
+      )}
+    </div>
+  );
 }
 
-function InfoRow({
-    label,
-    value,
-    icon,
-}: {
-    label: string;
-    value: string;
-    icon?: string;
-}) {
-    return (
-        <div className="group flex flex-col gap-1 p-4 rounded-xl bg-black/30 border border-white/5 hover:border-purple-500/30 hover:bg-purple-900/10 transition-all duration-300">
-            <div className="flex items-center gap-2 text-white/40 group-hover:text-purple-300 transition-colors">
-                <span className="text-xs">{icon}</span>
-                <p className="text-xs uppercase tracking-wider font-medium">
-                    {label}
-                </p>
-            </div>
-            <p className="text-white/90 font-medium text-lg mt-1 group-hover:text-white transition-colors">
-                {value}
-            </p>
-        </div>
-    );
+function InfoItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{label}</p>
+      <p className="text-sm font-medium text-slate-200">{value}</p>
+    </div>
+  );
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-        return (
-            <div className="bg-gray-900/95 backdrop-blur-md border border-purple-500/30 rounded-xl p-3 shadow-glow">
-                <p className="text-white font-medium text-sm mb-1">{label}</p>
-                <p className="text-cyan-400 text-lg font-bold">
-                    {payload[0].value} hrs
-                </p>
-            </div>
-        );
-    }
-    return null;
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-900 border border-slate-800 rounded-lg p-3 shadow-xl">
+        <p className="text-slate-400 text-sm mb-1">{label}</p>
+        <p className="text-white font-semibold text-lg">
+          {payload[0].value.toLocaleString()} hrs
+        </p>
+      </div>
+    );
+  }
+  return null;
 };
 
 function PlaytimeChart({
-    top5,
+  top5,
 }: {
-    top5: { appid: number; name: string; hours: number }[];
+  top5: { appid: number; name: string; hours: number }[];
 }) {
-    const barColors = ['#8B5CF6', '#7C3AED', '#06B6D4', '#3B82F6', '#6366F1'];
-
-    return (
-        <div className="h-[260px] rounded-xl bg-black/70 border border-white/10 p-4 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/30 via-cyan-600/30 to-purple-600/30 blur-xl opacity-50 animate-pulse z-0" />
-            {/* Content layer - z-10 puts it above the glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-cyan-900/10 pointer-events-none rounded-xl z-10" />
-
-            <p className="text-sm text-white/70 mb-3 font-medium tracking-wide">
-                Most played (hours)
-            </p>
-
-            <ResponsiveContainer width="100%" height="85%">
-                <BarChart
-                    data={top5}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                >
-                    <CartesianGrid
-                        strokeDasharray="3 3"
-                        stroke="rgba(255,255,255,0.05)"
-                        vertical={false}
-                    />
-
-                    <XAxis
-                        dataKey="name"
-                        tick={{
-                            fill: '#9CA3AF',
-                            fontSize: 11,
-                            fontWeight: 500,
-                        }}
-                        axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
-                        tickLine={false}
-                        height={40}
-                        tickFormatter={(value) =>
-                            value.length > 15
-                                ? value.substring(0, 15) + '...'
-                                : value
-                        }
-                    />
-
-                    <YAxis
-                        tick={{ fill: '#6B7280', fontSize: 10 }}
-                        axisLine={false}
-                        tickLine={false}
-                    />
-
-                    <Tooltip
-                        content={<CustomTooltip />}
-                        cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }}
-                    />
-
-                    <Bar
-                        dataKey="hours"
-                        radius={[6, 6, 0, 0]}
-                        stroke="rgba(255,255,255,0.1)"
-                        strokeWidth={1}
-                    >
-                        {top5.map((entry, index) => (
-                            <Cell
-                                key={`cell-${index}`}
-                                fill={`url(#gradient-${index})`}
-                                className="drop-shadow-[0_0_8px_rgba(139,92,246,0.4)]"
-                            />
-                        ))}
-                    </Bar>
-
-                    <defs>
-                        {top5.map((_, index) => (
-                            <linearGradient
-                                key={`gradient-${index}`}
-                                id={`gradient-${index}`}
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
-                            >
-                                <stop
-                                    offset="0%"
-                                    stopColor={barColors[index]}
-                                    stopOpacity={1}
-                                />
-                                <stop
-                                    offset="100%"
-                                    stopColor={barColors[index]}
-                                    stopOpacity={0.6}
-                                />
-                            </linearGradient>
-                        ))}
-                    </defs>
-                </BarChart>
-            </ResponsiveContainer>
-        </div>
-    );
+  return (
+    <div className="h-[300px] bg-slate-900/30 rounded-xl border border-slate-800/60 p-6">
+      <h3 className="text-sm font-medium text-slate-400 mb-6">Most played (hours)</h3>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={top5} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(100,116,139,0.2)" vertical={false} />
+          <XAxis
+            dataKey="name"
+            tick={{ fill: "#64748b", fontSize: 11 }}
+            axisLine={{ stroke: "rgba(100,116,139,0.2)" }}
+            tickLine={false}
+            height={50}
+            tickFormatter={(value) => value.length > 12 ? value.substring(0, 12) + "..." : value}
+            angle={-15}
+            textAnchor="end"
+          />
+          <YAxis
+            tick={{ fill: "#475569", fontSize: 11 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.05)" }} />
+          <Bar dataKey="hours" radius={[4, 4, 0, 0]} fill="url(#barGradient)" />
+          <defs>
+            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#6366f1" />
+              <stop offset="100%" stopColor="#4338ca" />
+            </linearGradient>
+          </defs>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
 }
 
 function PlaytimeSection({
-    games,
+  games,
 }: {
-    games: { appid: number; name: string; playtime_forever: number }[];
+  games: { appid: number; name: string; playtime_forever: number }[];
 }) {
-    const { totalHours, top5 } = buildPlaytimeStats(games);
+  const { totalHours, top5 } = buildPlaytimeStats(games);
 
-    return (
-        <div className="mt-8 p-6 rounded-2xl bg-white/5 border border-white/10">
-            <div className="flex items-end justify-between gap-6 mb-6">
-                <div>
-                    <h2 className="text-xl font-semibold">Playtime</h2>
-                    <p className="text-white/60 text-sm">
-                        Based on total minutes played across owned games
-                    </p>
-                </div>
-
-                <div className="text-right">
-                    <p className="text-white/60 text-sm">Total time played</p>
-                    <p className="text-3xl font-bold">
-                        {totalHours.toLocaleString()} hrs
-                    </p>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="rounded-xl bg-black/20 border border-white/10 p-4 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-cyan-500 to-blue-500" />
-
-                    <p className="text-sm text-white/70 mb-4 font-medium tracking-wide flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                        Top 5 Games
-                    </p>
-
-                    <div className="flex flex-col gap-3">
-                        {top5.map((g, i) => {
-                            const maxHours = top5[0].hours;
-                            const percentage = (g.hours / maxHours) * 100;
-                            const rankColors = [
-                                'from-yellow-400 to-orange-500',
-                                'from-gray-300 to-gray-400',
-                                'from-orange-700 to-orange-800',
-                                'from-purple-500 to-purple-600',
-                                'from-blue-500 to-cyan-500',
-                            ];
-                            const rankBg = [
-                                'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
-                                'bg-gray-400/20 text-gray-300 border-gray-400/30',
-                                'bg-orange-700/20 text-orange-400 border-orange-700/30',
-                                'bg-purple-500/20 text-purple-300 border-purple-500/30',
-                                'bg-blue-500/20 text-blue-300 border-blue-500/30',
-                            ];
-
-                            return (
-                                <div
-                                    key={g.appid}
-                                    className="group relative flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all duration-300"
-                                >
-                                    <div
-                                        className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold border ${rankBg[i]}`}
-                                    >
-                                        {i + 1}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center justify-between mb-1.5">
-                                            <p className="truncate font-medium text-white group-hover:text-cyan-300 transition-colors">
-                                                {g.name}
-                                            </p>
-                                            <span className="text-sm font-bold text-white/90 ml-2">
-                                                {g.hours}h
-                                            </span>
-                                        </div>
-                                        <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                            <div
-                                                className={`h-full rounded-full bg-gradient-to-r ${rankColors[i]} transition-all duration-1000 ease-out group-hover:brightness-110`}
-                                                style={{
-                                                    width: `${percentage}%`,
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-r from-purple-500/5 to-cyan-500/5" />
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <PlaytimeChart top5={top5} />
-            </div>
+  return (
+    <div className="mt-8 space-y-6">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-4 border-b border-slate-800/50">
+        <div>
+          <h2 className="text-2xl font-semibold text-white">Playtime Analytics</h2>
+          <p className="text-slate-500 text-sm mt-1">Total gaming statistics across your library</p>
         </div>
-    );
+        <div className="text-left sm:text-right">
+          <p className="text-3xl font-bold text-white tabular-nums tracking-tight">
+            {totalHours.toLocaleString()}
+            <span className="text-lg font-medium text-slate-500 ml-1.5">hrs</span>
+          </p>
+          <p className="text-xs text-slate-500 uppercase tracking-wider mt-0.5">Total Time Played</p>
+        </div>
+      </div>
+
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Top Games List */}
+        <div className="bg-slate-900/30 rounded-xl border border-slate-800/60 p-6">
+          <h3 className="text-sm font-medium text-slate-400 mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+            Top 5 Games
+          </h3>
+          
+          <div className="space-y-4">
+            {top5.map((game, index) => {
+              const maxHours = top5[0].hours;
+              const percentage = (game.hours / maxHours) * 100;
+              
+              return (
+                <div key={game.appid} className="group">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center justify-center w-6 h-6 rounded text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                        {index + 1}
+                      </span>
+                      <span className="font-medium text-slate-200 text-sm group-hover:text-white transition-colors">
+                        {game.name}
+                      </span>
+                    </div>
+                    <span className="text-sm font-semibold text-slate-300 tabular-nums">
+                      {game.hours}h
+                    </span>
+                  </div>
+                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-indigo-500 rounded-full transition-all duration-700 ease-out"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Chart */}
+        <PlaytimeChart top5={top5} />
+      </div>
+    </div>
+  );
+}
+
+function FriendRow({ friend }: { friend: any }) {
+  return (
+    <a
+      href={`/explore?user=${friend.id}`}
+      className="flex items-center gap-4 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/60 border border-slate-800/50 hover:border-slate-700 transition-all group"
+    >
+      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-slate-800 ring-1 ring-slate-700">
+        <img
+          src={friend.avatar}
+          className="w-full h-full object-cover"
+          alt={friend.personaName}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-slate-200 truncate group-hover:text-white transition-colors">
+          {friend.personaName}
+        </p>
+        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+          View profile 
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </p>
+      </div>
+    </a>
+  );
 }

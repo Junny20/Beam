@@ -1,17 +1,33 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import UniverseScene from '@/components/three/UniverseScene';
-import GameDetailPanel from '@/components/three/GameDetailPanel';
-import { GameGraphNode } from '@/lib/graph/types';
-import { Gamepad2 } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import UniverseScene from "@/components/three/UniverseScene";
+import GameDetailPanel from "@/components/three/GameDetailPanel";
+import { GameGraphNode } from "@/lib/graph/types";
+import { Gamepad2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 export default function ExplorePage() {
   const [nodes, setNodes] = useState<GameGraphNode[]>([]);
   const [selectedGame, setSelectedGame] = useState<GameGraphNode | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const pageRef = useRef<HTMLDivElement>(null);
+
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("user");
+
+  useEffect(() => {
+    const loadGraph = async () => {
+      const res = await fetch(
+        userId ? `/api/graph?user=${userId}` : "/api/graph",
+      );
+      const data = await res.json();
+      setNodes(data.nodes);
+    };
+
+    loadGraph().catch(console.error);
+  }, [userId]);
 
   // Ensure games exist (cheap if cached)
   useEffect(() => {
@@ -27,9 +43,9 @@ export default function ExplorePage() {
   useEffect(() => {
     if (!isLoading && pageRef.current) {
       gsap.fromTo(
-        '.explore-canvas',
+        ".explore-canvas",
         { opacity: 0 },
-        { opacity: 1, duration: 0.8, ease: 'power3.out' }
+        { opacity: 1, duration: 0.8, ease: "power3.out" },
       );
     }
   }, [isLoading]);
@@ -44,7 +60,7 @@ export default function ExplorePage() {
 
     loadGraph().catch(console.error);
   }, []);
-  
+
   if (isLoading) {
     return (
       <div className="fixed inset-0 bg-bg-darker flex items-center justify-center">
@@ -56,29 +72,31 @@ export default function ExplorePage() {
               <Gamepad2 className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h2 className="font-display text-2xl font-bold text-white mb-2">Loading Universe</h2>
+          <h2 className="font-display text-2xl font-bold text-white mb-2">
+            Loading Universe
+          </h2>
           <p className="text-gray-400">Mapping your gaming journey...</p>
         </div>
       </div>
     );
   }
-  
+
   return (
     <div ref={pageRef} className="fixed inset-0 bg-bg-darker">
       {/* Full Screen Canvas */}
       <div className="explore-canvas absolute inset-0">
-        <UniverseScene 
+        <UniverseScene
           nodes={nodes}
-          onNodeClick={setSelectedGame} 
+          onNodeClick={setSelectedGame}
           selectedGame={selectedGame}
         />
       </div>
-      
+
       {/* Game Detail Panel */}
       {selectedGame && (
-        <GameDetailPanel 
-          game={selectedGame} 
-          onClose={() => setSelectedGame(null)} 
+        <GameDetailPanel
+          game={selectedGame}
+          onClose={() => setSelectedGame(null)}
         />
       )}
     </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
@@ -5,23 +7,6 @@ import * as THREE from "three";
 import type { GameGraphNode } from "@/lib/graph/types";
 import { calculateNodeProperties } from "@/lib/graph/calculateNodeProperties";
 import { formatDate } from "@/lib/graph/formatDate";
-
-const glowTexture = (() => {
-  const canvas = document.createElement("canvas");
-  canvas.width = 128;
-  canvas.height = 128;
-  const ctx = canvas.getContext("2d")!;
-
-  const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  g.addColorStop(0, "rgba(255,255,255,1)");
-  g.addColorStop(0.35, "rgba(255,255,255,0.35)");
-  g.addColorStop(1, "rgba(255,255,255,0)");
-
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 128, 128);
-
-  return new THREE.CanvasTexture(canvas);
-})();
 
 /* ============================
    TUNING CONSTANTS
@@ -41,7 +26,7 @@ function clamp(v: number, min: number, max: number) {
 
 /** deterministic pseudo-random in [0,1) */
 function seeded01(seed: number) {
-  return (Math.sin(seed * 9999.123) * 43758.5453) % 1 + 1;
+  return ((Math.sin(seed * 9999.123) * 43758.5453) % 1) + 1;
 }
 function seeded(seed: number) {
   return seeded01(seed) % 1;
@@ -66,6 +51,26 @@ export default function GameNode({
   isSelected,
   index,
 }: GameNodeProps) {
+  const glowTexture = useMemo(() => {
+    if (typeof window === "undefined") return null;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 128;
+
+    const ctx = canvas.getContext("2d")!;
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+
+    g.addColorStop(0, "rgba(255,255,255,1)");
+    g.addColorStop(0.35, "rgba(255,255,255,0.35)");
+    g.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+
   const rootRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
@@ -92,9 +97,7 @@ export default function GameNode({
   const features = useMemo(() => {
     // prefer id-based stability; fallback to index if needed
     const baseSeed =
-      typeof game.id === "number"
-        ? game.id * 0.1337
-        : index * 0.1337;
+      typeof game.id === "number" ? game.id * 0.1337 : index * 0.1337;
 
     const r1 = seeded(baseSeed + 1);
     const r2 = seeded(baseSeed + 2);
@@ -134,7 +137,7 @@ export default function GameNode({
   ----------------------------- */
   const planetGeometry = useMemo(
     () => new THREE.SphereGeometry(radius, 32, 32),
-    [radius]
+    [radius],
   );
 
   /* ----------------------------
@@ -142,19 +145,19 @@ export default function GameNode({
   ----------------------------- */
   const ringGeomH = useMemo(
     () => new THREE.RingGeometry(radius * 1.55, radius * 1.95, 96),
-    [radius]
+    [radius],
   );
   const ringGeomV = useMemo(
     () => new THREE.RingGeometry(radius * 1.35, radius * 1.65, 72),
-    [radius]
+    [radius],
   );
   const ringGeomT = useMemo(
     () => new THREE.RingGeometry(radius * 1.7, radius * 2.15, 84),
-    [radius]
+    [radius],
   );
   const debrisGeom = useMemo(
     () => new THREE.TorusGeometry(radius * 2.45, 0.07, 10, 64),
-    [radius]
+    [radius],
   );
 
   /* ----------------------------
@@ -205,7 +208,7 @@ export default function GameNode({
       const target = isSelected ? SELECT_SCALE : isHovered ? HOVER_SCALE : 1;
       meshRef.current.scale.lerp(
         new THREE.Vector3(target, target, target),
-        0.08
+        0.08,
       );
     }
 
@@ -237,7 +240,7 @@ export default function GameNode({
       satelliteRef.current.position.set(
         Math.cos(a) * r,
         Math.sin(a * 1.3) * 0.35,
-        Math.sin(a) * r
+        Math.sin(a) * r,
       );
     }
   });
@@ -247,15 +250,17 @@ export default function GameNode({
       {/* GLOW */}
       <mesh ref={glowRef} position={[0, 0, -0.35]}>
         <planeGeometry args={[radius * 5.2, radius * 5.2]} />
-        <meshBasicMaterial
-          map={glowTexture}
-          color={game.color}
-          transparent
-          opacity={0.33 + glowIntensity * 0.12}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          side={THREE.DoubleSide}
-        />
+        {glowTexture && (
+          <meshBasicMaterial
+            map={glowTexture}
+            color={game.color}
+            transparent
+            opacity={0.33 + glowIntensity * 0.12}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+            side={THREE.DoubleSide}
+          />
+        )}
       </mesh>
 
       {/* RINGS (varied orientations) */}
@@ -288,11 +293,7 @@ export default function GameNode({
       {features.tiltedRing && (
         <mesh
           ref={ringTRef}
-          rotation={[
-            Math.PI / 2 + features.tilt,
-            features.tilt2,
-            Math.PI / 6,
-          ]}
+          rotation={[Math.PI / 2 + features.tilt, features.tilt2, Math.PI / 6]}
         >
           <primitive object={ringGeomT} attach="geometry" />
           <meshBasicMaterial
@@ -397,7 +398,9 @@ export default function GameNode({
               </div>
               <div className="flex justify-between">
                 <span>Last played</span>
-                <span className="text-white">{formatDate(game.lastPlayed)}</span>
+                <span className="text-white">
+                  {formatDate(game.lastPlayed)}
+                </span>
               </div>
             </div>
           </div>

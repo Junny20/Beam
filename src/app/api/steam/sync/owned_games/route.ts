@@ -1,17 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSteamId64 } from "@/lib/getSteamId64";
 import { prisma } from "@/lib/prisma";
-import { syncOwnedGames } from "@/lib/sync/ownedGames";
+import { syncFriends } from "@/lib/sync/friends";
 
 export async function POST(req: NextRequest) {
   let steamId64: string;
+
   try {
     steamId64 = getSteamId64(req);
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({ where: { steamId64 } });
+  const user = await prisma.user.findUnique({
+    where: { steamId64 },
+  });
+
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
@@ -19,7 +23,8 @@ export async function POST(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const force = searchParams.get("force") === "true";
 
-  const existingCount = await prisma.ownedGame.count({
+  // Count existing friend edges
+  const existingCount = await prisma.friend.count({
     where: { userId: user.id },
   });
 
@@ -27,8 +32,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ skipped: true });
   }
 
-  // Expensive... 
-  await syncOwnedGames(user.id, steamId64);
+  await syncFriends(steamId64);
 
   return NextResponse.json({ ok: true });
 }

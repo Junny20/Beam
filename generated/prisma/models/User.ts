@@ -277,6 +277,8 @@ export type UserWhereInput = {
   lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   ownedGames?: Prisma.OwnedGameListRelationFilter
+  friendsInitiated?: Prisma.FriendListRelationFilter
+  friendsReceived?: Prisma.FriendListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -292,6 +294,8 @@ export type UserOrderByWithRelationInput = {
   lastSyncAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownedGames?: Prisma.OwnedGameOrderByRelationAggregateInput
+  friendsInitiated?: Prisma.FriendOrderByRelationAggregateInput
+  friendsReceived?: Prisma.FriendOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -310,6 +314,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastSyncAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   ownedGames?: Prisma.OwnedGameListRelationFilter
+  friendsInitiated?: Prisma.FriendListRelationFilter
+  friendsReceived?: Prisma.FriendListRelationFilter
 }, "id" | "steamId64">
 
 export type UserOrderByWithAggregationInput = {
@@ -361,6 +367,8 @@ export type UserCreateInput = {
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
   ownedGames?: Prisma.OwnedGameCreateNestedManyWithoutUserInput
+  friendsInitiated?: Prisma.FriendCreateNestedManyWithoutUserInput
+  friendsReceived?: Prisma.FriendCreateNestedManyWithoutFriendInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -376,6 +384,8 @@ export type UserUncheckedCreateInput = {
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
   ownedGames?: Prisma.OwnedGameUncheckedCreateNestedManyWithoutUserInput
+  friendsInitiated?: Prisma.FriendUncheckedCreateNestedManyWithoutUserInput
+  friendsReceived?: Prisma.FriendUncheckedCreateNestedManyWithoutFriendInput
 }
 
 export type UserUpdateInput = {
@@ -391,6 +401,8 @@ export type UserUpdateInput = {
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownedGames?: Prisma.OwnedGameUpdateManyWithoutUserNestedInput
+  friendsInitiated?: Prisma.FriendUpdateManyWithoutUserNestedInput
+  friendsReceived?: Prisma.FriendUpdateManyWithoutFriendNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -406,6 +418,8 @@ export type UserUncheckedUpdateInput = {
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownedGames?: Prisma.OwnedGameUncheckedUpdateManyWithoutUserNestedInput
+  friendsInitiated?: Prisma.FriendUncheckedUpdateManyWithoutUserNestedInput
+  friendsReceived?: Prisma.FriendUncheckedUpdateManyWithoutFriendNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -549,6 +563,34 @@ export type UserUpdateOneRequiredWithoutOwnedGamesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOwnedGamesInput, Prisma.UserUpdateWithoutOwnedGamesInput>, Prisma.UserUncheckedUpdateWithoutOwnedGamesInput>
 }
 
+export type UserCreateNestedOneWithoutFriendsInitiatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendsInitiatedInput, Prisma.UserUncheckedCreateWithoutFriendsInitiatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendsInitiatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutFriendsReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendsReceivedInput, Prisma.UserUncheckedCreateWithoutFriendsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFriendsInitiatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendsInitiatedInput, Prisma.UserUncheckedCreateWithoutFriendsInitiatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendsInitiatedInput
+  upsert?: Prisma.UserUpsertWithoutFriendsInitiatedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFriendsInitiatedInput, Prisma.UserUpdateWithoutFriendsInitiatedInput>, Prisma.UserUncheckedUpdateWithoutFriendsInitiatedInput>
+}
+
+export type UserUpdateOneRequiredWithoutFriendsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFriendsReceivedInput, Prisma.UserUncheckedCreateWithoutFriendsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFriendsReceivedInput
+  upsert?: Prisma.UserUpsertWithoutFriendsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFriendsReceivedInput, Prisma.UserUpdateWithoutFriendsReceivedInput>, Prisma.UserUncheckedUpdateWithoutFriendsReceivedInput>
+}
+
 export type UserCreateWithoutOwnedGamesInput = {
   id?: string
   steamId64: string
@@ -561,6 +603,8 @@ export type UserCreateWithoutOwnedGamesInput = {
   locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
+  friendsInitiated?: Prisma.FriendCreateNestedManyWithoutUserInput
+  friendsReceived?: Prisma.FriendCreateNestedManyWithoutFriendInput
 }
 
 export type UserUncheckedCreateWithoutOwnedGamesInput = {
@@ -575,6 +619,8 @@ export type UserUncheckedCreateWithoutOwnedGamesInput = {
   locCountryCode?: string | null
   lastSyncAt?: Date | string | null
   createdAt?: Date | string
+  friendsInitiated?: Prisma.FriendUncheckedCreateNestedManyWithoutUserInput
+  friendsReceived?: Prisma.FriendUncheckedCreateNestedManyWithoutFriendInput
 }
 
 export type UserCreateOrConnectWithoutOwnedGamesInput = {
@@ -605,6 +651,8 @@ export type UserUpdateWithoutOwnedGamesInput = {
   locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  friendsInitiated?: Prisma.FriendUpdateManyWithoutUserNestedInput
+  friendsReceived?: Prisma.FriendUpdateManyWithoutFriendNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedGamesInput = {
@@ -619,6 +667,168 @@ export type UserUncheckedUpdateWithoutOwnedGamesInput = {
   locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  friendsInitiated?: Prisma.FriendUncheckedUpdateManyWithoutUserNestedInput
+  friendsReceived?: Prisma.FriendUncheckedUpdateManyWithoutFriendNestedInput
+}
+
+export type UserCreateWithoutFriendsInitiatedInput = {
+  id?: string
+  steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
+  lastSyncAt?: Date | string | null
+  createdAt?: Date | string
+  ownedGames?: Prisma.OwnedGameCreateNestedManyWithoutUserInput
+  friendsReceived?: Prisma.FriendCreateNestedManyWithoutFriendInput
+}
+
+export type UserUncheckedCreateWithoutFriendsInitiatedInput = {
+  id?: string
+  steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
+  lastSyncAt?: Date | string | null
+  createdAt?: Date | string
+  ownedGames?: Prisma.OwnedGameUncheckedCreateNestedManyWithoutUserInput
+  friendsReceived?: Prisma.FriendUncheckedCreateNestedManyWithoutFriendInput
+}
+
+export type UserCreateOrConnectWithoutFriendsInitiatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendsInitiatedInput, Prisma.UserUncheckedCreateWithoutFriendsInitiatedInput>
+}
+
+export type UserCreateWithoutFriendsReceivedInput = {
+  id?: string
+  steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
+  lastSyncAt?: Date | string | null
+  createdAt?: Date | string
+  ownedGames?: Prisma.OwnedGameCreateNestedManyWithoutUserInput
+  friendsInitiated?: Prisma.FriendCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFriendsReceivedInput = {
+  id?: string
+  steamId64: string
+  personaName?: string | null
+  avatar?: string | null
+  visibility?: number | null
+  personaState?: number | null
+  lastLogOff?: number | null
+  timeCreated?: number | null
+  locCountryCode?: string | null
+  lastSyncAt?: Date | string | null
+  createdAt?: Date | string
+  ownedGames?: Prisma.OwnedGameUncheckedCreateNestedManyWithoutUserInput
+  friendsInitiated?: Prisma.FriendUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFriendsReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendsReceivedInput, Prisma.UserUncheckedCreateWithoutFriendsReceivedInput>
+}
+
+export type UserUpsertWithoutFriendsInitiatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFriendsInitiatedInput, Prisma.UserUncheckedUpdateWithoutFriendsInitiatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendsInitiatedInput, Prisma.UserUncheckedCreateWithoutFriendsInitiatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFriendsInitiatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFriendsInitiatedInput, Prisma.UserUncheckedUpdateWithoutFriendsInitiatedInput>
+}
+
+export type UserUpdateWithoutFriendsInitiatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownedGames?: Prisma.OwnedGameUpdateManyWithoutUserNestedInput
+  friendsReceived?: Prisma.FriendUpdateManyWithoutFriendNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFriendsInitiatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownedGames?: Prisma.OwnedGameUncheckedUpdateManyWithoutUserNestedInput
+  friendsReceived?: Prisma.FriendUncheckedUpdateManyWithoutFriendNestedInput
+}
+
+export type UserUpsertWithoutFriendsReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFriendsReceivedInput, Prisma.UserUncheckedUpdateWithoutFriendsReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFriendsReceivedInput, Prisma.UserUncheckedCreateWithoutFriendsReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFriendsReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFriendsReceivedInput, Prisma.UserUncheckedUpdateWithoutFriendsReceivedInput>
+}
+
+export type UserUpdateWithoutFriendsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownedGames?: Prisma.OwnedGameUpdateManyWithoutUserNestedInput
+  friendsInitiated?: Prisma.FriendUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFriendsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  steamId64?: Prisma.StringFieldUpdateOperationsInput | string
+  personaName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visibility?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  personaState?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lastLogOff?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  timeCreated?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  locCountryCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSyncAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownedGames?: Prisma.OwnedGameUncheckedUpdateManyWithoutUserNestedInput
+  friendsInitiated?: Prisma.FriendUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -628,10 +838,14 @@ export type UserUncheckedUpdateWithoutOwnedGamesInput = {
 
 export type UserCountOutputType = {
   ownedGames: number
+  friendsInitiated: number
+  friendsReceived: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ownedGames?: boolean | UserCountOutputTypeCountOwnedGamesArgs
+  friendsInitiated?: boolean | UserCountOutputTypeCountFriendsInitiatedArgs
+  friendsReceived?: boolean | UserCountOutputTypeCountFriendsReceivedArgs
 }
 
 /**
@@ -651,6 +865,20 @@ export type UserCountOutputTypeCountOwnedGamesArgs<ExtArgs extends runtime.Types
   where?: Prisma.OwnedGameWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFriendsInitiatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FriendWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFriendsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FriendWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -665,6 +893,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastSyncAt?: boolean
   createdAt?: boolean
   ownedGames?: boolean | Prisma.User$ownedGamesArgs<ExtArgs>
+  friendsInitiated?: boolean | Prisma.User$friendsInitiatedArgs<ExtArgs>
+  friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -713,6 +943,8 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "steamId64" | "personaName" | "avatar" | "visibility" | "personaState" | "lastLogOff" | "timeCreated" | "locCountryCode" | "lastSyncAt" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ownedGames?: boolean | Prisma.User$ownedGamesArgs<ExtArgs>
+  friendsInitiated?: boolean | Prisma.User$friendsInitiatedArgs<ExtArgs>
+  friendsReceived?: boolean | Prisma.User$friendsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -722,6 +954,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     ownedGames: Prisma.$OwnedGamePayload<ExtArgs>[]
+    friendsInitiated: Prisma.$FriendPayload<ExtArgs>[]
+    friendsReceived: Prisma.$FriendPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1130,6 +1364,8 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   ownedGames<T extends Prisma.User$ownedGamesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedGamesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OwnedGamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  friendsInitiated<T extends Prisma.User$friendsInitiatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsInitiatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  friendsReceived<T extends Prisma.User$friendsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$friendsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1579,6 +1815,54 @@ export type User$ownedGamesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.OwnedGameScalarFieldEnum | Prisma.OwnedGameScalarFieldEnum[]
+}
+
+/**
+ * User.friendsInitiated
+ */
+export type User$friendsInitiatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Friend
+   */
+  select?: Prisma.FriendSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Friend
+   */
+  omit?: Prisma.FriendOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FriendInclude<ExtArgs> | null
+  where?: Prisma.FriendWhereInput
+  orderBy?: Prisma.FriendOrderByWithRelationInput | Prisma.FriendOrderByWithRelationInput[]
+  cursor?: Prisma.FriendWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FriendScalarFieldEnum | Prisma.FriendScalarFieldEnum[]
+}
+
+/**
+ * User.friendsReceived
+ */
+export type User$friendsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Friend
+   */
+  select?: Prisma.FriendSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Friend
+   */
+  omit?: Prisma.FriendOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FriendInclude<ExtArgs> | null
+  where?: Prisma.FriendWhereInput
+  orderBy?: Prisma.FriendOrderByWithRelationInput | Prisma.FriendOrderByWithRelationInput[]
+  cursor?: Prisma.FriendWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FriendScalarFieldEnum | Prisma.FriendScalarFieldEnum[]
 }
 
 /**
