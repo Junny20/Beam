@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const players = await getPlayerSummaries(steamId64, steamApiKey);
+  const players = await getPlayerSummaries([steamId64], steamApiKey);
 
   const player = players[0];
   if (!player) {

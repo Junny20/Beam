@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const profile = await getPlayerSummaries(steamId64, steamApiKey);
+    const profile = await getPlayerSummaries([steamId64], steamApiKey);
     return NextResponse.json(profile, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: `Internal Server Error: ${pathname}` }, { status: 500 });

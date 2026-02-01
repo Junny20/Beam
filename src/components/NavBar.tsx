@@ -51,7 +51,6 @@ export const NavBar = () => {
     const links = [
         { href: '/', label: 'Home' },
         { href: '/explore', label: 'Explore' },
-        { href: '/leaderboard', label: 'Leaderboard' },
     ];
 
     return (

@@ -4,7 +4,7 @@ import { prisma } from "../prisma";
 const steamApiKey = process.env.STEAM_API_KEY!;
 
 export async function syncProfile(steamId64: string) {
-  const players = await getPlayerSummaries(steamId64, steamApiKey);
+  const players = await getPlayerSummaries([steamId64], steamApiKey);
 
   const player = players[0];
   if (!player) {
