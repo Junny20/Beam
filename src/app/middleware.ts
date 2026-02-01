@@ -1,7 +1,9 @@
 import { verifyAuthJwt } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-const baseUrl = process.env.BASE_URL!;
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ??
+  "https://beam-eta-rust.vercel.app";
 
 export function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
