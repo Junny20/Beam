@@ -79,7 +79,6 @@ const MOCK_MESSAGES = [
     { type: 'expansion' as const, text: '2,400 hours mapped this hour' },
 ];
 
-// Three.js Components
 function ParticleField() {
     const mesh = useRef<THREE.Points>(null);
     const mouseRef = useRef({ x: 0, y: 0 });
