@@ -5,7 +5,7 @@ import {
     calculateNodeProperties,
     getFriendsWhoOwnGame,
     getFriendsWhoPlayedRecently,
-} from '@/data/mockGames';
+} from './data/mockGames';
 import {
     Trophy,
     Clock,
