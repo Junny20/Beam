@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { useSearchParams } from "next/navigation";
 import UniverseScene from "@/components/three/UniverseScene";
 import GameDetailPanel from "@/components/three/GameDetailPanel";
 import { GameGraphNode } from "@/lib/graph/types";
 import { Gamepad2 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 export default function ExplorePage() {
   const [nodes, setNodes] = useState<GameGraphNode[]>([]);
@@ -15,31 +15,38 @@ export default function ExplorePage() {
   const pageRef = useRef<HTMLDivElement>(null);
 
   const searchParams = useSearchParams();
-  const userId = searchParams.get("user");
+  const userId = searchParams.get("user"); // null = your galaxy
 
   useEffect(() => {
     const loadGraph = async () => {
+      setIsLoading(true);
+
       const res = await fetch(
         userId ? `/api/graph?user=${userId}` : "/api/graph",
       );
+
+      if (!res.ok) {
+        console.error("Failed to load galaxy");
+        setIsLoading(false);
+        return;
+      }
+
       const data = await res.json();
-      setNodes(data.nodes);
+      setNodes(data.nodes ?? []);
+      setIsLoading(false);
     };
 
     loadGraph().catch(console.error);
   }, [userId]);
 
-  // Ensure games exist (cheap if cached)
   useEffect(() => {
-    const ensureGames = async () => {
-      await fetch("/api/steam/sync/owned_games", { method: "POST" });
-      setIsLoading(false);
-    };
+    if (userId) return;
 
-    ensureGames().catch(console.error);
-  }, []);
+    fetch("/api/steam/sync/owned_games", { method: "POST" }).catch(
+      console.error,
+    );
+  }, [userId]);
 
-  // Entrance animation
   useEffect(() => {
     if (!isLoading && pageRef.current) {
       gsap.fromTo(
@@ -49,17 +56,6 @@ export default function ExplorePage() {
       );
     }
   }, [isLoading]);
-
-  // Builds the GameGraphNodes
-  useEffect(() => {
-    const loadGraph = async () => {
-      const res = await fetch("/api/graph");
-      const data = await res.json();
-      setNodes(data.nodes);
-    };
-
-    loadGraph().catch(console.error);
-  }, []);
 
   if (isLoading) {
     return (
@@ -75,7 +71,27 @@ export default function ExplorePage() {
           <h2 className="font-display text-2xl font-bold text-white mb-2">
             Loading Universe
           </h2>
-          <p className="text-gray-400">Mapping your gaming journey...</p>
+          <p className="text-gray-400">
+            {userId
+              ? "Viewing friend's galaxy..."
+              : "Mapping your gaming journey..."}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isLoading && nodes.length === 0) {
+    return (
+      <div className="fixed inset-0 bg-bg-darker flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Galaxy unavailable
+          </h2>
+          <p className="text-white/60">
+            This user’s Steam profile is private or they haven’t synced their
+            games yet.
+          </p>
         </div>
       </div>
     );
@@ -83,7 +99,7 @@ export default function ExplorePage() {
 
   return (
     <div ref={pageRef} className="fixed inset-0 bg-bg-darker">
-      {/* Full Screen Canvas */}
+      {/* Fullscreen Canvas */}
       <div className="explore-canvas absolute inset-0">
         <UniverseScene
           nodes={nodes}
@@ -92,8 +108,8 @@ export default function ExplorePage() {
         />
       </div>
 
-      {/* Game Detail Panel */}
-      {selectedGame && (
+      {/* Game Detail Panel (only for your galaxy) */}
+      {selectedGame && !userId && (
         <GameDetailPanel
           game={selectedGame}
           onClose={() => setSelectedGame(null)}

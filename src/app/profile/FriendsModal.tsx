@@ -49,7 +49,7 @@ export function FriendsModal({ onClose }: { onClose: () => void }) {
                 <p className="font-medium text-white truncate">
                   {f.personaName}
                 </p>
-                <p className="text-xs text-white/50">View galaxy →</p>
+                <p className="text-xs text-white/50">View galaxy</p>
               </div>
             </a>
           ))}

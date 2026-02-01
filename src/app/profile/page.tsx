@@ -162,11 +162,11 @@ export default function ProfilePage() {
                 {/* Info Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800/50">
                   <InfoItem label="Visibility" value={visibilityLabel(profile.visibility)} />
-                  <InfoItem label="Last Online" value={formatUnix(profile.lastlogoff)} />
+                  <InfoItem label="Last Online" value={formatUnix(profile.lastLogOff)} />
                   <InfoItem label="Member Since" value={formatDate(profile.timeCreated)} />
-                  <InfoItem label="Location" value={profile.locstatecode || "Unknown"} />
+                  <InfoItem label="Location" value={profile.locCountryCode || "Unknown"} />
                   <InfoItem label="Games Owned" value={games.length.toString()} />
-                  <InfoItem label="Profile State" value={profile.personaState ? "Configured" : "Unknown"} />
+                  <InfoItem label="Profile State" value="Configured" />
                 </div>
               </div>
             </div>
@@ -316,33 +316,5 @@ function PlaytimeSection({
         <PlaytimeChart top5={top5} />
       </div>
     </div>
-  );
-}
-
-function FriendRow({ friend }: { friend: any }) {
-  return (
-    <a
-      href={`/explore?user=${friend.id}`}
-      className="flex items-center gap-4 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/60 border border-slate-800/50 hover:border-slate-700 transition-all group"
-    >
-      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-slate-800 ring-1 ring-slate-700">
-        <img
-          src={friend.avatar}
-          className="w-full h-full object-cover"
-          alt={friend.personaName}
-        />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-medium text-slate-200 truncate group-hover:text-white transition-colors">
-          {friend.personaName}
-        </p>
-        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-          View profile 
-          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </p>
-      </div>
-    </a>
   );
 }
