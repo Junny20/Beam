@@ -12,7 +12,6 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 import ghostPfp from '@/public/ghostpfp.jpg';
-import { Play } from 'next/font/google';
 
 function formatUnix(ts?: number) {
     if (!ts) return 'Unknown';
@@ -78,7 +77,7 @@ export default function ProfilePage() {
     return (
         <div className="p-6">
             {/* Top card */}
-            <div className="flex flex-col md:flex-row gap-8 p-8 rounded-2xl bg-white/5 border border-white/10">
+            <div className="flex flex-col md:flex-row gap-8 p-8 rounded-2xl bg-white/5 border border-white/10 mt-[60px]">
                 <div className="shrink-0">
                     <div className="relative w-[200px] h-[200px] rounded-[30px] overflow-hidden border border-white/10">
                         <Image
@@ -159,32 +158,7 @@ export default function ProfilePage() {
                     </div>
                 </div>
             </div>
-
-            {/* Bottom section (future expansion) */}
-            <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <PlaytimeSection games={mockGamesOwned} />
-                <Panel title="Now Playing (later)">
-                    <p className="text-white/60 text-sm">
-                        GetPlayerSummaries doesn’t include game name. You can
-                        show “In-game” based on personastateflags or integrate
-                        other endpoints to display real activity.
-                    </p>
-                </Panel>
-
-                <Panel title="Recent Activity (later)">
-                    <p className="text-white/60 text-sm">
-                        Add recent games using GetRecentlyPlayedGames
-                        (IPlayerService) once you wire it up.
-                    </p>
-                </Panel>
-
-                <Panel title="Friends / Social (later)">
-                    <p className="text-white/60 text-sm">
-                        Add friend list using GetFriendList (ISteamUser) + map
-                        IDs back through GetPlayerSummaries.
-                    </p>
-                </Panel>
-            </div>
+            <PlaytimeSection games={mockGamesOwned} />
         </div>
     );
 }
