@@ -1,26 +1,28 @@
-'use client'
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import UniverseScene from '@/components/three/UniverseScene';
 import GameDetailPanel from '@/components/three/GameDetailPanel';
-import type { Game } from '@/data/mockGames';
-
+import { GameGraphNode } from '@/lib/graph/types';
 import { Gamepad2 } from 'lucide-react';
 
 export default function ExplorePage() {
-  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [nodes, setNodes] = useState<GameGraphNode[]>([]);
+  const [selectedGame, setSelectedGame] = useState<GameGraphNode | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const pageRef = useRef<HTMLDivElement>(null);
-  
-  // Simulate loading
+
+  // Ensure games exist (cheap if cached)
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const ensureGames = async () => {
+      await fetch("/api/steam/sync/owned_games", { method: "POST" });
       setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
+    };
+
+    ensureGames().catch(console.error);
   }, []);
-  
+
   // Entrance animation
   useEffect(() => {
     if (!isLoading && pageRef.current) {
@@ -31,6 +33,17 @@ export default function ExplorePage() {
       );
     }
   }, [isLoading]);
+
+  // Builds the GameGraphNodes
+  useEffect(() => {
+    const loadGraph = async () => {
+      const res = await fetch("/api/graph");
+      const data = await res.json();
+      setNodes(data.nodes);
+    };
+
+    loadGraph().catch(console.error);
+  }, []);
   
   if (isLoading) {
     return (
@@ -55,6 +68,7 @@ export default function ExplorePage() {
       {/* Full Screen Canvas */}
       <div className="explore-canvas absolute inset-0">
         <UniverseScene 
+          nodes={nodes}
           onNodeClick={setSelectedGame} 
           selectedGame={selectedGame}
         />

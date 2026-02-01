@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { AuthPayload, signAuthJwt } from "@/lib/auth";
 import { syncProfile } from "@/lib/sync/profile";
+import { syncOwnedGames } from "@/lib/sync/ownedGames";
 
 const baseUrl = process.env.BASE_URL!;
 const cookieExpiresIn = process.env.COOKIE_EXPIRES_IN!;
@@ -100,7 +101,8 @@ export async function GET(req: Request) {
         });
 
         void syncProfile(steamId64).catch(console.error);
-
+        void syncOwnedGames(user.id, steamId64).catch(console.error);
+        
         return res;
     }
 }

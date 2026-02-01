@@ -11,9 +11,20 @@ export async function syncProfile(steamId64: string) {
     throw new Error("syncProfile failed");
   }
 
-  await prisma.user.update({
+  await prisma.user.upsert({
     where: { steamId64 },
-    data: {
+    create: {
+      steamId64,
+      personaName: player.personaname,
+      avatar: player.avatarfull,
+      visibility: player.communityvisibilitystate,
+      personaState: player.personastate,
+      lastLogOff: player.lastlogoff,
+      timeCreated: player.timecreated,
+      locCountryCode: player.loccountrycode,
+      lastSyncAt: new Date(),
+    },
+    update: {
       personaName: player.personaname,
       avatar: player.avatarfull,
       visibility: player.communityvisibilitystate,
