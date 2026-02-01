@@ -467,6 +467,7 @@ function PlaytimeSection({
 
                 <PlaytimeChart top5={top5} />
             </div>
+            <Backlogs games={games} />
         </div>
     );
 }
