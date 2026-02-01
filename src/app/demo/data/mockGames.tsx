@@ -183,7 +183,7 @@ export const gameData: Game[] = [
     {
         id: 9,
         name: 'Counter-Strike 2',
-        playtime: 892,
+        playtime: 492,
         recentHours: 32,
         genre: 'FPS',
         lastPlayed: '5 hours ago',
@@ -351,7 +351,7 @@ export function calculateNodeProperties(game: Game) {
     const maxRecent = Math.max(...gameData.map((g) => g.recentHours));
 
     // Size based on total playtime (0.4 to 1.5)
-    const size = 0.4 + (game.playtime / maxPlaytime) * 1.1;
+    const size = 0.4 + (game.playtime / maxPlaytime) * 0.6;
 
     // Glow intensity based on recent activity (0 to 1)
     const glowIntensity = maxRecent > 0 ? game.recentHours / maxRecent : 0;

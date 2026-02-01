@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import type { GameGraphNode } from "@/lib/graph/types";
-import { calculateNodeProperties } from "@/lib/graph/calculateNodeProperties";
+import { calculateNodeProperties } from "@/data/mockGames";
 
 interface GameNodeProps {
   game: GameGraphNode;

@@ -1,5 +1,5 @@
 import { useRef, useMemo, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Html } from "@react-three/drei";
 import * as THREE from "three";
 import GameNode from "./GameNode";
@@ -108,7 +108,6 @@ function Scene({
   selectedGame: GameGraphNode | null;
 }) {
   const [hoveredNode, setHoveredNode] = useState<number | null>(null);
-  const { camera } = useThree();
  
   const gameNodes = useMemo(
     () =>
@@ -152,23 +151,6 @@ function Scene({
 
   const handleNodeClick = (game: GameGraphNode) => {
     onNodeClick(game);
-
-    const node = gameNodes.find((n) => n.game.id === game.id);
-    if (!node) return;
-
-    const target = new THREE.Vector3(
-      node.position.x * 0.3,
-      node.position.y * 0.3,
-      6,
-    );
-
-    const animate = () => {
-      camera.position.lerp(target, 0.05);
-      if (camera.position.distanceTo(target) > 0.1) {
-        requestAnimationFrame(animate);
-      }
-    };
-    animate();
   };
 
   return (
