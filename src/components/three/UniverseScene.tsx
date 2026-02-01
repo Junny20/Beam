@@ -8,86 +8,98 @@ import { calculateNodeProperties } from "@/lib/graph/calculateNodeProperties";
 import { ghostGames } from "@/data/mockGames";
 import { GameGraphNode } from "@/lib/graph/types";
 
-/* =======================
-   Central Core
-======================= */
+const MAX_ZOOM_OUT = 50;
+
 function CentralCore() {
   const coreRef = useRef<THREE.Mesh>(null);
-  const glowRef = useRef<THREE.Mesh>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
+  const innerGlowRef = useRef<THREE.Mesh>(null);
+  const outerGlowRef = useRef<THREE.Mesh>(null);
+  const haloRef = useRef<THREE.Mesh>(null);
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
 
-    coreRef.current?.rotation.set(
-      Math.sin(t * 0.2) * 0.1,
-      coreRef.current.rotation.y + 0.002,
-      0,
-    );
+    // Core rotation (slow + confident)
+    if (coreRef.current) {
+      coreRef.current.rotation.y += 0.003;
+      coreRef.current.rotation.x = Math.sin(t * 0.25) * 0.12;
+    }
 
-    glowRef.current?.scale.setScalar(1 + Math.sin(t * 0.8) * 0.15);
+    // Breathing glow
+    const pulse = 1 + Math.sin(t * 0.9) * 0.08;
 
-    if (ringRef.current) {
-      ringRef.current.rotation.z -= 0.005;
-      ringRef.current.rotation.x = Math.PI / 2 + Math.sin(t * 0.3) * 0.1;
+    innerGlowRef.current?.scale.setScalar(pulse);
+    outerGlowRef.current?.scale.setScalar(pulse * 1.15);
+
+    // Energy halo wobble
+    if (haloRef.current) {
+      haloRef.current.rotation.z -= 0.004;
+      haloRef.current.rotation.x =
+        Math.PI / 2 + Math.sin(t * 0.4) * 0.15;
     }
   });
 
   return (
     <group>
-      <mesh ref={glowRef}>
-        <sphereGeometry args={[1.5, 32, 32]} />
+      {/* Outer atmospheric glow */}
+      <mesh ref={outerGlowRef}>
+        <sphereGeometry args={[2.4, 32, 32]} />
         <meshBasicMaterial
           color="#7b68ee"
           transparent
-          opacity={0.15}
+          opacity={0.06}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      <mesh ref={ringRef}>
-        <torusGeometry args={[2, 0.02, 16, 100]} />
+      {/* Inner glow shell */}
+      <mesh ref={innerGlowRef}>
+        <sphereGeometry args={[1.7, 32, 32]} />
         <meshBasicMaterial
-          color="#7b68ee"
+          color="#a78bfa"
           transparent
-          opacity={0.4}
+          opacity={0.12}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.3, 0.015, 16, 100]} />
+      {/* Energy halo ring */}
+      <mesh ref={haloRef}>
+        <torusGeometry args={[2.1, 0.05, 16, 120]} />
         <meshBasicMaterial
-          color="#9b7eed"
+          color="#8b5cf6"
           transparent
-          opacity={0.3}
+          opacity={0.45}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
 
+      {/* Core sphere */}
       <mesh ref={coreRef}>
-        <icosahedronGeometry args={[0.6, 1]} />
+        <sphereGeometry args={[0.7, 48, 48]} />
         <meshStandardMaterial
-          color="#fff"
-          emissive="#7b68ee"
-          emissiveIntensity={0.5}
-          metalness={0.8}
-          roughness={0.2}
+          color="#ffffff"
+          emissive="#8b5cf6"
+          emissiveIntensity={0.65}
+          metalness={0.85}
+          roughness={0.15}
         />
       </mesh>
 
+      {/* Core wireframe */}
       <mesh>
-        <icosahedronGeometry args={[0.6, 1]} />
+        <sphereGeometry args={[0.72, 24, 24]} />
         <meshBasicMaterial
-          color="#7b68ee"
+          color="#c4b5fd"
           wireframe
           transparent
-          opacity={0.3}
+          opacity={0.25}
         />
       </mesh>
 
-      <Html center distanceFactor={6}>
-        <p className="text-xs text-purple-light/70 uppercase tracking-widest">
+      {/* Label */}
+      <Html center distanceFactor={7}>
+        <p className="text-xs text-purple-light/70 uppercase tracking-[0.3em]">
           Your Games
         </p>
       </Html>
@@ -108,23 +120,32 @@ function Scene({
   selectedGame: GameGraphNode | null;
 }) {
   const [hoveredNode, setHoveredNode] = useState<number | null>(null);
- 
+
   const gameNodes = useMemo(
     () =>
       nodes.map((game, i) => {
-        const baseOrbit = 0.2;
-        const spacing = 0.35;
         const { size } = calculateNodeProperties(game);
 
-        const orbitDistance = baseOrbit + i * spacing + size * 10;
-        const angle = (i / nodes.length) * Math.PI * 2 + i * 0.3;
+        const baseOrbit = 2.0;
+        const spacing = 1.2;
+        const orbitRadius = baseOrbit + i * spacing + size * 2;
+
+        const angle = (i / nodes.length) * Math.PI * 2 + i * 0.35;
+
+        const bandCount = 10; // number of Y layers
+        const bandHeight = 0.9;
+        const bandIndex = i % bandCount;
+
+        const y =
+          (bandIndex - (bandCount - 1) / 2) * bandHeight +
+          Math.sin(angle * 1.3) * 0.3;
 
         return {
           game,
           position: new THREE.Vector3(
-            Math.cos(angle) * orbitDistance,
-            Math.sin(angle) * orbitDistance * 0.5,
-            Math.sin(angle * 1.5) * 2,
+            Math.cos(angle) * orbitRadius,
+            y,
+            Math.sin(angle) * orbitRadius * 0.6,
           ),
         };
       }),
@@ -185,7 +206,7 @@ function Scene({
         enableZoom
         enableRotate
         minDistance={3}
-        maxDistance={20}
+        maxDistance={MAX_ZOOM_OUT} // how far we can zoom out
         autoRotate={!hoveredNode && !selectedGame}
         autoRotateSpeed={0.3}
         dampingFactor={0.02}
@@ -213,7 +234,7 @@ export default function UniverseScene({
   return (
     <div className="w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 12], fov: 60 }}
+        camera={{ position: [0, 0, 12], fov: 65 }}
         gl={{
           antialias: true,
           alpha: true,
