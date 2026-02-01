@@ -100,9 +100,9 @@ export default function GameNode({
       meshRef.current.rotation.x = Math.sin(t * 0.1 + index) * 0.1;
       meshRef.current.rotation.y += 0.005;
 
-      const target = isSelected ? 1.8 : isHovered ? 1.3 : 1;
+      const targetScale = isSelected ? 1.4 : isHovered ? 1.1 : 1;
       meshRef.current.scale.lerp(
-        new THREE.Vector3(target, target, target),
+        new THREE.Vector3(targetScale, targetScale, targetScale),
         0.1
       );
     }

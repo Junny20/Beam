@@ -46,13 +46,14 @@ export async function buildGameGraph(userId: string): Promise<GameGraphNode[]> {
 // }
 
 function colorFromAppId(appid: number): string {
-  const palette = [
-    "#8B5CF6", // purple
-    "#EF4444", // red
-    "#F59E0B", // amber
-    "#3B82F6", // blue
-    "#10B981", // green
-    "#EC4899", // pink
-  ];
-  return palette[appid % palette.length];
+  // deterministic hash
+  let seed = appid * 9301 + 49297;
+  seed = seed % 233280;
+  const rand = seed / 233280;
+
+  const hue = Math.floor(rand * 360);
+  const saturation = 70 + (appid % 20);
+  const lightness = 45 + (appid % 10);
+
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
