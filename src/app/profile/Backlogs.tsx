@@ -1,11 +1,11 @@
-import { mockOwnedGames } from '@/data/mockUsers';
+import type { OwnedGame } from '@/data/mockUsers';
 import { analyzeLibrary } from '@/lib/backlog';
 import BacklogOverviewCard from '@/components/BacklogCard';
 import ColdLibraryTable from '@/components/ColdLibraryTable';
 import AbandonedGamesCard from '@/components/AbandonedGames';
 
-export default function DashboardPage() {
-    const analysis = analyzeLibrary(mockOwnedGames);
+export default function Backlogs(gamesProp?: typeof OwnedGame) {
+    const analysis = analyzeLibrary(gamesProp ?? mockOwnedGames);
 
     return (
         <div className="min-h-screen bg-[#0B0F19] text-white">
