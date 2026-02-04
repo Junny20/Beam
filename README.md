@@ -1,3 +1,3 @@
 SandHacks 2026 submission.
 
-Built with @katelnli
+Built by @Junny20 and @katelnyli
